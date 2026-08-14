@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">BuildLedger</title>
+  <rect width="512" height="512" rx="112" fill="#163d7a"/>
+  <path d="M118 243 256 130l138 113v153a24 24 0 0 1-24 24H142a24 24 0 0 1-24-24V243Z" fill="#fff" opacity=".98"/>
+  <path d="M86 254 256 114l170 140" fill="none" stroke="#f4b740" stroke-linecap="round" stroke-linejoin="round" stroke-width="36"/>
+  <path d="M190 420V285h132v135" fill="#dbe8f8"/>
+  <path d="M219 317h74M219 350h74M219 383h48" stroke="#163d7a" stroke-linecap="round" stroke-width="14"/>
+</svg>
