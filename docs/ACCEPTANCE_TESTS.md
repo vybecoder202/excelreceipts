@@ -30,9 +30,10 @@ The canonical end-to-end fixture follows this sequence and asserts after every p
 
 - Strict TypeScript passes.
 - ESLint passes with current Next.js configuration.
-- Fourteen unit tests cover exact decimal behavior, production environment failure, redirect safety, owner allowlist normalization, and project input validation.
-- Playwright covers truthful empty state, confirmed setup defaults, safe sign-in configuration feedback, and mobile navigation in Chromium desktop/mobile profiles.
-- A separate authenticated Playwright run uses only the fake local owner to verify session cookies, protected setup, first-project creation, authorized dashboard state, and sign-out against reset local Supabase.
+- Sixteen unit tests cover exact decimal behavior, production environment failure, redirect safety, owner allowlist normalization, and project/phase input validation.
+- Playwright covers truthful empty states, confirmed setup defaults, safe sign-in configuration feedback, Site & progress routing, and mobile navigation in Chromium desktop/mobile profiles.
+- A separate authenticated Playwright run uses only the fake local owner to verify session cookies, protected setup, first-project creation, field-level recovery, phase creation, authorized dashboard/site state, mobile sizing, and sign-out against reset local Supabase.
+- Sixty-one pgTAP checks cover the identity/project and delivery-planning schemas, forced RLS, grants, roles, human references, idempotency, audit evidence, weighted progress, cross-project protection, constraints, and atomic rollback.
 
 Run that isolated flow with `npm run test:e2e:auth`. The command refuses non-local Supabase URLs and clearly resets the fake-only local database before testing; it must never be pointed at development or production data.
 - Production build prerenders the application shell and module routes successfully.

@@ -31,3 +31,11 @@ test("sign-in screen explains the safe unconfigured state", async ({ page }) => 
   await expect(page.getByRole("button", { name: "Continue with Google" })).toBeDisabled();
   await expect(page.getByText(/after the development Supabase project is configured/i)).toBeVisible();
 });
+
+test("site planning route shows a truthful project-required state", async ({ page }) => {
+  await page.goto("/site");
+  await expect(page.getByRole("heading", { name: "Site & progress" })).toBeVisible();
+  await expect(page.getByText("Project required")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open project setup" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});

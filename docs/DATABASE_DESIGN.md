@@ -1,6 +1,6 @@
 # Initial database design
 
-Status: foundation migrated and tested; business-module migrations continue in Phase 2
+Status: identity/project and delivery-planning foundations migrated and tested; remaining business-module migrations continue
 Last updated: 2026-08-14
 
 ## Design principles
@@ -99,11 +99,17 @@ Migration `20260814180000_foundation_identity_and_projects.sql` now implements p
 
 All exposed foundation tables have forced RLS. Direct table mutation is revoked, project reads require active membership, and 23 pgTAP tests cover local Auth fixture integrity, owner admission, defaults, single active ownership, isolation, read-only restrictions, idempotency, atomic failure, and audit immutability.
 
+## Implemented project delivery slice
+
+Migration `20260814202000_project_delivery_foundation.sql` implements phases, tasks, same-project task dependencies, milestones, append-only progress updates, per-project human references, and a security-invoker progress summary view. Weighted project progress is the sum of each active task's completion percentage multiplied by its positive progress weight, divided by the sum of active weights. Cancelled and archived tasks are excluded; no tasks yields zero rather than an invented estimate.
+
+Phase and task creation use owner/editor-only, idempotent database commands that assign references, append audit evidence, and leave no partial rows on failure. Read-only members can view authorized delivery records but receive no mutation grants. The combined database suite now contains 61 passing tests, including cross-project dependency rejection and deterministic weighted progress.
+
 ## Migration sequence
 
 1. Extensions, enums/domains, and shared helpers. **Implemented for the foundation.**
 2. Profiles, projects, memberships, settings, and reference data. **Implemented.**
 3. Audit and idempotency foundations. **Implemented.**
-4. Project, finance, procurement, inventory, workforce, and document tables in dependency order.
+4. Project delivery tables. **First phases/tasks/milestones/progress slice implemented.** Finance, procurement, inventory, workforce, and document tables continue in dependency order.
 5. Transactional posting functions and calculation views.
 6. RLS policies, grants, indexes, and database tests.

@@ -38,7 +38,7 @@ test.beforeEach(async ({ context }) => {
   );
 });
 
-test("authenticated owner creates the first project through the protected flow", async ({ page }) => {
+test("authenticated owner creates the first project and phase through protected flows", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/setup");
 
@@ -60,6 +60,27 @@ test("authenticated owner creates the first project through the protected flow",
   await expect(page.getByText("Project created securely")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Local authenticated house build" })).toBeVisible();
   await expect(page.getByText("Project connected")).toBeVisible();
+
+  await page.goto("/site");
+  await expect(page.getByRole("heading", { name: "Site & progress" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "No phases yet" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+
+  const createPhaseButton = page.getByRole("button", { name: "Create phase" });
+  expect((await createPhaseButton.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+  await createPhaseButton.click();
+  await expect(page.getByText("Review the highlighted phase details and try again.")).toBeVisible();
+
+  await page.getByLabel(/Phase name/).fill("Substructure");
+  await page.getByLabel("Description").fill("Foundations and ground works");
+  await page.getByLabel("Planned start").fill("2026-08-17");
+  await page.getByLabel("Planned end").fill("2026-09-18");
+  await createPhaseButton.click();
+
+  await expect(page).toHaveURL(/\/site\?created=phase$/);
+  await expect(page.getByText("Phase created", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Substructure" })).toBeVisible();
+  await expect(page.getByText("PH-2026-0001")).toBeVisible();
 
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.getByRole("button", { name: "Sign out" }).click();

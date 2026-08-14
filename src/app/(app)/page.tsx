@@ -26,6 +26,7 @@ import { Card } from "@/components/ui/card";
 import { StatusPill } from "@/components/ui/status-pill";
 import { getApplicationAccess } from "@/lib/auth/access";
 import { getFoundationReadiness } from "@/lib/env/server";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const metrics = [
   { label: "Approved budget", description: "Original plus approved revisions", icon: Landmark },
@@ -50,6 +51,16 @@ export default async function DashboardPage({
   const access = await getApplicationAccess();
   const project = access.mode === "authenticated" ? access.project : null;
   const { created } = await searchParams;
+  let siteProgress: { percent_complete: number | null; overdue_task_count: number | null } | null = null;
+  if (project) {
+    const supabase = await createServerSupabaseClient();
+    const { data } = await supabase
+      .from("project_progress_summary")
+      .select("percent_complete, overdue_task_count")
+      .eq("project_id", project.id)
+      .maybeSingle();
+    siteProgress = data;
+  }
 
   return (
     <div className="space-y-6 lg:space-y-8">
@@ -190,7 +201,15 @@ export default async function DashboardPage({
       <section className="grid gap-4 md:grid-cols-3" aria-label="Project operational summaries">
         <SummaryCard icon={PackageCheck} title="Deliveries" detail="No purchase orders are connected." />
         <SummaryCard icon={Boxes} title="Materials" detail="No stock locations are connected." />
-        <SummaryCard icon={Camera} title="Site progress" detail="No daily logs are connected." />
+        <SummaryCard
+          icon={Camera}
+          title="Site progress"
+          detail={
+            project
+              ? `${formatProgress(siteProgress?.percent_complete)}% weighted progress · ${siteProgress?.overdue_task_count ?? 0} overdue tasks`
+              : "No daily logs are connected."
+          }
+        />
       </section>
     </div>
   );
@@ -216,4 +235,11 @@ function SummaryCard({ icon: Icon, title, detail }: { icon: LucideIcon; title: s
       </div>
     </Card>
   );
+}
+
+function formatProgress(value: number | null | undefined) {
+  return new Intl.NumberFormat("en-ZM", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value ?? 0);
 }

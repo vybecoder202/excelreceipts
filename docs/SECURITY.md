@@ -48,7 +48,7 @@ Last updated: 2026-08-14
 
 ## Phase 2 database controls
 
-Every exposed foundation table has forced RLS before grants. Policies use `auth.uid()` and active project membership. Read-only roles receive no mutation grants or policies. The private owner allowlist is outside the exposed schema. Future business tables must follow the same default-deny pattern before application wiring.
+Every exposed identity, project, and delivery-planning table has forced RLS before grants. Policies use `auth.uid()` and active project membership. Read-only roles receive no mutation grants or policies. The private owner allowlist is outside the exposed schema. Future business tables must follow the same default-deny pattern before application wiring.
 
 Critical database functions will:
 

@@ -15,6 +15,9 @@ All notable project changes are recorded here.
 - Local Supabase project configuration, identity/project migrations, valid fake-only Auth development seed, generated database types, and 23 pgTAP authorization/atomicity tests.
 - Supabase SSR cookie refresh through Next.js Proxy, signed-claim access context, safe sign-out, redirect validation, and protected application layouts.
 - Responsive owner-only project setup with validated server action, idempotent database command, loading/error feedback, and authorized dashboard identity state.
+- Project delivery schema for phases, tasks, dependencies, milestones, progress history, per-project references, and a deterministic weighted-progress view.
+- Responsive Site & progress screen with authorized project summaries, truthful empty/error states, phase creation, inline validation, loading feedback, and read-only behavior.
+- Sixty-one passing database tests and an authenticated mobile browser workflow covering project and phase creation.
 
 ### Changed
 
