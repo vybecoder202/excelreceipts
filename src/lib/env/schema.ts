@@ -21,6 +21,7 @@ export const serverEnvironmentSchema = publicEnvironmentSchema.extend({
   GOOGLE_DRIVE_BACKUP_FOLDER_ID: optionalSecret,
   DEFAULT_CURRENCY: z.string().trim().length(3).toUpperCase().optional(),
   PROJECT_TIMEZONE: optionalSecret,
+  LOCAL_DEMO_MODE: z.enum(["true", "false"]).default("false"),
   AI_FEATURES_ENABLED: z.enum(["true", "false"]).default("false"),
   AI_PROVIDER: optionalSecret,
   AI_API_KEY: optionalSecret,

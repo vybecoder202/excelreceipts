@@ -1,15 +1,17 @@
-import { ArrowRight, Boxes, FileText, PackageCheck, ReceiptText, Settings, UsersRound } from "lucide-react";
+import { ArrowRight, Boxes, ClipboardList, FileText, PackageCheck, ReceiptText, Settings, UsersRound, WalletCards } from "lucide-react";
 import Link from "next/link";
 
 import { Card } from "@/components/ui/card";
 
 const links = [
+  { href: "/finances", label: "Finances", icon: WalletCards },
   { href: "/procurement", label: "Procurement", icon: PackageCheck },
+  { href: "/inventory", label: "Inventory", icon: Boxes },
+  { href: "/site", label: "Site & progress", icon: ClipboardList },
   { href: "/workforce", label: "Workforce", icon: UsersRound },
   { href: "/documents", label: "Documents", icon: FileText },
   { href: "/reports", label: "Reports", icon: ReceiptText },
   { href: "/settings", label: "Settings", icon: Settings },
-  { href: "/inventory", label: "Inventory", icon: Boxes },
 ];
 
 export default function ModulesPage() {

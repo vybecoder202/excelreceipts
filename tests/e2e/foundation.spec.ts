@@ -1,17 +1,20 @@
 import { expect, test } from "@playwright/test";
 
-test("foundation dashboard exposes safe empty state", async ({ page }) => {
+test("workspace exposes a safe project-required data state", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Project overview" })).toBeVisible();
-  await expect(page.getByText("No project data connected")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Set up project" })).toBeVisible();
+  await expect(page).toHaveURL(/\/data$/);
+  await expect(page.getByRole("heading", { name: "Data" })).toBeVisible();
+  await expect(page.getByText("Project required")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open project setup" })).toBeVisible();
 });
 
 test("mobile layout keeps primary navigation reachable", async ({ page }, testInfo) => {
   test.skip(!testInfo.project.name.includes("mobile"), "Mobile project only");
   await page.goto("/");
-  await expect(page.getByRole("navigation", { name: "Primary mobile navigation" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Inventory" }).last()).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Workspace sections" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Data" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Interfaces" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Forms" })).toBeVisible();
 });
 
 test("project setup presents confirmed owner decisions without exposing private identity", async ({

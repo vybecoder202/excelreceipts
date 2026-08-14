@@ -20,6 +20,21 @@ flowchart LR
 
 The application is a Next.js App Router project using React Server Components by default. Browser reads use a publishable Supabase client scoped by RLS when this improves responsiveness. Server Components, route handlers, and server actions use cookie-backed sessions. Privileged or multi-table writes pass through server authorization and transactional PostgreSQL functions.
 
+## Configurable workspace engine
+
+A project currently acts as one configurable base. The builder separates definitions from values:
+
+- `data_tables`, `data_fields`, and `data_views` define the Data workspace.
+- `data_records` identifies rows without encoding their shape.
+- `data_cells` stores scalar values in typed PostgreSQL columns. Currency and other numeric data use `numeric`, never floating point.
+- `data_record_links` stores validated relationships separately from scalar cells. A database trigger confirms that each source record, link field, target record, and configured target table agree.
+- `data_forms` and `data_form_fields` define entry experiences over the same fields.
+- `data_interfaces` and `data_interface_blocks` define count, numeric-summary, and record-list presentations over the same records.
+
+Lookup fields follow a configured link field to a stored field in the target table. Formula fields use a constrained operator and explicit source field IDs; arbitrary SQL or JavaScript expressions are not accepted. This avoids executable user content and dependency cycles while the formula engine grows.
+
+The Construction starter installs configuration only: eight related tables, specialized views, two forms, and one interface. It does not insert fake operational records. Domain-grade posting workflows for finance and inventory will continue to use dedicated transactional ledgers rather than treating a configurable table as an authoritative accounting ledger.
+
 ## Layer responsibilities
 
 ### Browser interface

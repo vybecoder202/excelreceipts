@@ -1,7 +1,30 @@
 # Initial database design
 
-Status: identity/project and delivery-planning foundations migrated and tested; remaining business-module migrations continue
+Status: identity/project, delivery planning, core entry, and configurable workspace foundations migrated and tested
 Last updated: 2026-08-14
+
+## Configurable workspace model
+
+The general builder uses metadata definitions while retaining relational integrity:
+
+```mermaid
+erDiagram
+    PROJECTS ||--o{ DATA_TABLES : owns
+    DATA_TABLES ||--o{ DATA_FIELDS : defines
+    DATA_TABLES ||--o{ DATA_RECORDS : contains
+    DATA_RECORDS ||--o{ DATA_CELLS : has
+    DATA_FIELDS ||--o{ DATA_CELLS : types
+    DATA_FIELDS ||--o{ DATA_RECORD_LINKS : configures
+    DATA_RECORDS ||--o{ DATA_RECORD_LINKS : source
+    DATA_RECORDS ||--o{ DATA_RECORD_LINKS : target
+    DATA_TABLES ||--o{ DATA_VIEWS : presents
+    DATA_TABLES ||--o{ DATA_FORMS : receives
+    DATA_FORMS ||--o{ DATA_FORM_FIELDS : orders
+    PROJECTS ||--o{ DATA_INTERFACES : owns
+    DATA_INTERFACES ||--o{ DATA_INTERFACE_BLOCKS : composes
+```
+
+Scalar cells have separate text, numeric, Boolean, date, option, and JSON columns with a one-value constraint. Linked records are separate rows whose trigger validates the configured target table. Lookups and formulas store definitions only and are read-only in record entry. Public clients have member-scoped reads and no direct mutation grants; server actions call authorized, audited, idempotent SQL commands.
 
 ## Design principles
 

@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { LocalDemoSignInForm } from "@/components/auth/local-demo-sign-in-form";
+import { isLocalDemoEnabled } from "@/lib/auth/local-demo";
 import { safeNextPath } from "@/lib/auth/navigation";
 import { hasPublicSupabaseConfiguration } from "@/lib/env/public";
 
@@ -19,6 +21,7 @@ export default async function SignInPage({
   searchParams: Promise<{ error?: string; next?: string }>;
 }) {
   const configured = hasPublicSupabaseConfiguration();
+  const localDemoEnabled = isLocalDemoEnabled(process.env);
   const parameters = await searchParams;
   const nextPath = safeNextPath(parameters.next);
   const errorMessage = parameters.error ? errorMessages[parameters.error] : undefined;
@@ -53,7 +56,20 @@ export default async function SignInPage({
               <span>{errorMessage}</span>
             </div>
           ) : null}
-          <div className="mt-8"><GoogleSignInButton configured={configured} nextPath={nextPath} /></div>
+          <div className="mt-8 space-y-4">
+            {localDemoEnabled ? (
+              <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4">
+                <p className="text-sm font-bold text-blue-950">Local testing mode</p>
+                <p className="mt-1 text-xs leading-5 text-blue-900">
+                  Uses a fake owner stored only in the local Supabase database. Test records persist until you reset them.
+                </p>
+                <div className="mt-3">
+                  <LocalDemoSignInForm nextPath={nextPath} />
+                </div>
+              </div>
+            ) : null}
+            <GoogleSignInButton configured={configured} nextPath={nextPath} />
+          </div>
           <div className="mt-8 border-t border-slate-200 pt-6">
             <p className="text-xs leading-5 text-slate-500">Google sign-in proves identity. Project membership and database Row Level Security still decide what the account may read or change.</p>
           </div>

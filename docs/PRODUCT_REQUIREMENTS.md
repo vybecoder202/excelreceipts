@@ -1,11 +1,19 @@
 # Product requirements
 
-Status: initial baseline
+Status: configurable workspace baseline
 Last updated: 2026-08-14
 
 ## Product summary
 
 Construction Manager is a private, responsive web application for one owner managing a residential house build. It brings budgets, supplier obligations, purchases, deliveries, inventory, site work, workforce records, documents, reports, and recovery operations into one auditable system.
+
+The owner has directed that the product first become a general no-code relational workspace. Its primary information architecture is:
+
+- **Data:** configurable tables, typed fields, records, linked records, lookups, formulas, and saved views.
+- **Interfaces:** simpler dashboards and operational screens composed from Data.
+- **Forms:** focused data-entry experiences whose submissions become records in Data.
+
+Construction management is the first installable solution built with this engine, rather than a permanently fixed set of navigation modules. Existing domain-specific construction tables remain available during the transition and will be reconciled into controlled construction workflows incrementally.
 
 The first production release must work without paid infrastructure and without runtime AI. The confirmed defaults are Zambian Kwacha (`ZMW`) and the `Africa/Lusaka` timezone. Tax and wage calculations are excluded from scope by owner decision.
 
@@ -86,6 +94,8 @@ The owner can:
 - Filtering, saved filters, sorting, grouping, pagination, column visibility, and mobile card alternatives.
 - Explicit empty, loading, slow-network, error, unauthorized, disconnected-integration, and success states.
 - Read caching is allowed; offline finance and inventory mutations are not.
+- Desktop data grids may scroll within their own bounded region; mobile uses record cards so the page itself does not require horizontal scrolling.
+- Linked-record fields must expose the relationship clearly, and lookup/formula fields must be visibly read-only in record forms.
 
 ## Non-functional requirements
 

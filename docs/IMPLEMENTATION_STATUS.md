@@ -4,7 +4,9 @@ Last updated: 2026-08-14
 
 ## Current position
 
-Phase 0 discovery/design and the Phase 1 application foundation are complete. The secured database foundation now includes identity, owner admission, projects, phases, tasks, dependencies, milestones, progress history, and deterministic weighted progress. SSR session refresh, protected server access, responsive owner/project setup, and the live Site & progress phase workflow are implemented. UI/UX Pro Max produced the persistent system under `design-system/construction-manager/`; its typography and primary-action treatment were refined for a nontechnical homeowner.
+The product has pivoted from fixed construction-module navigation to a general configurable workspace organized as Data, Interfaces, and Forms. The metadata engine, responsive workspace shell, construction starter, linked records, lookups, constrained formulas, typed records, forms, and live interface blocks are implemented locally. Earlier construction module screens and their dedicated schema remain available during the transition.
+
+This differs from the original source brief, which assumed construction-specific modules would be the primary application structure. The owner explicitly requested the general builder on 2026-08-14; ADR 0008 records the decision and the boundary that authoritative accounting and inventory posting still require dedicated ledgers.
 
 ## Phase checklist
 
@@ -18,8 +20,12 @@ Phase 0 discovery/design and the Phase 1 application foundation are complete. Th
 - [x] Implement the identity/project database foundation and baseline RLS.
 - [x] Implement SSR session refresh, server-side access context, and owner project setup.
 - [x] Implement the first project-delivery slice: phases, tasks, dependencies, milestones, progress, RLS, and phase UI.
-- [ ] Extend migrations and RLS across the remaining business modules.
-- [ ] Implement core business modules.
+- [x] Implement the first usable finance, supplier, inventory catalogue, workforce, attendance, and daily-log entry slice.
+- [x] Implement configurable tables, typed fields/cells, linked records, lookups, formulas, views, forms, interfaces, and a construction starter.
+- [ ] Add builder schema editing: rename/archive tables and fields, reorder fields, and reciprocal links.
+- [ ] Add persistent filtering, sorting, grouping, field visibility, CSV import/export, and attachments.
+- [ ] Add interface block editing, form field layout controls, and automations.
+- [ ] Reconcile configurable construction tables with dedicated authoritative finance/inventory ledgers.
 - [ ] Verify external accounts, integrations, deployment, backup, and restore.
 
 ## Verified technical baseline
@@ -48,22 +54,25 @@ Checked 2026-08-14 using official documentation and npm registry metadata:
 - Free-plan limits and dashboard labels are time-sensitive and must be re-verified from official sources immediately before instructions are finalized.
 - The generated design system originally suggested highly technical heading typography. Plus Jakarta Sans is the recorded, implemented owner-friendly override.
 
-## Foundation verification evidence
+## Verification evidence
 
 - `npm run typecheck`: passed.
 - `npm run lint`: passed after pinning ESLint 9.39.5, the latest line compatible with the current Next.js React lint plugins.
-- `npm test`: 6 files, 16 tests passed.
-- `npm run build`: passed; 17 application routes generated.
-- `npm run test:e2e`: 9 passed and 1 intentionally skipped by project targeting across desktop/mobile Chromium.
-- `npm run test:e2e:auth`: 1 passed against reset local Supabase; verified fake-owner password session cookies, protected setup, transactional project creation, authorized dashboard state, and sign-out.
-- Browser QA: 1440×900 and 375×812 both had no horizontal overflow; adaptive navigation behaved correctly; visible mobile interactive targets were at least 44 px.
+- `npm test`: 10 files, 28 tests passed, including linked lookup and exact-decimal formula materialization.
+- `npm run build`: passed; 20 application routes generated, including dynamic Data, Forms, and Interfaces routes.
+- Pre-pivot browser coverage for the earlier module shell passed. Its authenticated scenario now needs replacement with a builder-focused scenario; the owner has chosen to perform current visual/feature testing, so that browser rewrite is not a completion claim for this phase.
 - `npm install` audit: 0 known vulnerabilities reported.
 - Clean local database reset: foundation migration and fake-only development seed applied successfully.
-- `npm run db:test`: 2 files, 61 pgTAP database/RLS/atomicity tests passed.
+- `npm run db:test`: 4 files, 165 pgTAP database/RLS/atomicity tests passed; 45 cover the configurable workspace.
 - Generated database types are wired into both Supabase client factories.
+
+## Current local testing boundary
+
+The owner will perform visual and feature testing. Authentication expansion is intentionally deprioritized; local demo mode remains the entry point. No current external account is needed.
 
 ## Next local work
 
-- Add task creation and controlled task/progress status transitions to the Site & progress interface.
-- Begin budget categories/lines and supplier/contact foundations, retaining deterministic calculation boundaries.
-- Add authenticated integration coverage when the hosted development Supabase/Google provider account checkpoint is reached.
+- Add table/field rename, archive, and ordering commands.
+- Add persisted view filters, sorts, groups, and column visibility.
+- Add form layout editing and interface block/layout editing.
+- Add reciprocal linked fields, rollups, safe richer formulas, CSV import/export, and local attachments metadata.

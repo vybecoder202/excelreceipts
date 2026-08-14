@@ -7,6 +7,8 @@
   },
   "scripts": {
     "dev": "next dev",
+    "demo": "node scripts/run-local-demo.mjs",
+    "demo:reset": "supabase db reset --local",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

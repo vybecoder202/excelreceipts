@@ -6,17 +6,24 @@ export function MetricCard({
   label,
   description,
   icon: Icon,
+  value,
 }: {
   label: string;
   description: string;
   icon: LucideIcon;
+  value?: string;
 }) {
   return (
     <Card className="min-w-0 p-4 sm:p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-semibold text-slate-600">{label}</p>
-          <p className="mt-2 text-2xl font-extrabold tabular-nums tracking-tight text-slate-400" aria-label={`${label} has no value yet`}>—</p>
+          <p
+            className={`mt-2 text-2xl font-extrabold tabular-nums tracking-tight ${value ? "text-slate-950" : "text-slate-400"}`}
+            aria-label={value ? undefined : `${label} has no value yet`}
+          >
+            {value ?? "—"}
+          </p>
         </div>
         <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-blue-50 text-blue-800" aria-hidden="true">
           <Icon className="size-5" strokeWidth={1.9} />

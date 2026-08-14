@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 const localOwnerEmail = "owner@example.test";
 const supabaseCli = resolve("node_modules/supabase/dist/supabase.js");
 const playwrightCli = resolve("node_modules/@playwright/test/cli.js");
+const nextCli = resolve("node_modules/next/dist/bin/next");
 
 function runCli(script, arguments_, options = {}) {
   return spawnSync(process.execPath, [script, ...arguments_], {
@@ -61,9 +62,19 @@ try {
     NEXT_PUBLIC_SUPABASE_URL: apiUrl,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: publishableKey,
     OWNER_EMAIL_ALLOWLIST: localOwnerEmail,
+    LOCAL_DEMO_MODE: "true",
     DEFAULT_CURRENCY: "ZMW",
     PROJECT_TIMEZONE: "Africa/Lusaka",
   };
+
+  process.stdout.write("Building the authenticated test application...\n");
+  requireSuccess(
+    runCli(nextCli, ["build"], {
+      env: testEnvironment,
+      stdio: "inherit",
+    }),
+    "Building the authenticated test application",
+  );
 
   requireSuccess(
     runCli(playwrightCli, ["test", "--config", "playwright.auth.config.ts"], {

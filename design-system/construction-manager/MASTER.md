@@ -8,9 +8,19 @@
 
 **Project:** Construction Manager
 **Generated:** 2026-08-14 17:02:24
-**Category:** Analytics Dashboard
+**Category:** No-code relational workspace and construction operations
 
 ---
+
+## Workspace builder information architecture
+
+- Primary navigation is limited to **Data**, **Interfaces**, and **Forms**. Construction modules are solution configuration, not peers at this navigation level.
+- Data uses a dense, flat productivity-tool surface: compact 56 px global header, bounded table sidebar, view tabs, toolbar, and low-contrast grid lines.
+- Use blue for Data, cyan for Interfaces, and violet for Forms. Keep semantic success, warning, and destructive colors unchanged.
+- Desktop grids scroll inside the data region. At widths below 768 px, records become labelled cards and tables become horizontal navigation tabs.
+- Linked records use violet chips with a link icon. Lookup and formula fields are visibly read-only and explain that they calculate after save.
+- Side sheets are the standard creation/editing surface. They require a visible Close action, labelled fields, inline errors, and 44 px minimum controls.
+- Avoid decorative motion and heavy card elevation in the Data grid; density, stable alignment, keyboard focus, and clear state take priority.
 
 ## Global Rules
 

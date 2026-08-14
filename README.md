@@ -1,20 +1,32 @@
 # Construction Manager
 
-Construction Manager is a private residential construction-management PWA. It is being built in controlled phases with exact financial arithmetic, append-only inventory movements, explicit authorization, private document storage, deterministic reports, and independently restorable encrypted backups.
+Construction Manager is becoming a configurable local workspace builder with **Data**, **Interfaces**, and **Forms**. The construction system is the first solution installed on top of that general engine. Typed fields, linked records, lookups, formulas, views, forms, and interface blocks all use the same PostgreSQL records.
 
-## Local foundation
+## Preview and add test data
 
-Requirements: Node.js 20.9 or newer and npm.
+Requirements: Node.js 20.9 or newer, npm, and Docker Desktop.
 
 ```powershell
-npm install
-Copy-Item .env.example .env.local
-npm run dev
+cd "C:\Users\user\Documents\Construction Project Manager"
+npm run demo
 ```
 
-Open `http://localhost:3000` to preview the current responsive dashboard shell. It renders without external services; live authenticated data and Google-dependent actions remain unavailable until their development configuration is added. Never put real secret values into documentation or chat.
+Open `http://localhost:3000/sign-in`, choose **Open local demo**, and create a project if needed. In **Data**, install the Construction starter or create a blank table. The starter creates connected tables, two entry forms, multiple views, and a construction overview interface. Data persists locally between runs.
 
-Local database development requires Docker Desktop:
+Useful builder checks:
+
+1. Add a supplier record.
+2. Add an expense and link it to that supplier.
+3. Confirm the linked supplier appears as a violet record chip.
+4. Add a lookup field that follows the Supplier link and returns Phone.
+5. Open Forms and submit an Expense entry or Daily site log.
+6. Open Interfaces and confirm record counts and summaries update.
+
+To intentionally erase all local demo data, stop the app and run `npm run demo:reset`.
+
+## Local development
+
+Install and verify dependencies, then use the local database commands when changing migrations:
 
 ```powershell
 npm run db:start

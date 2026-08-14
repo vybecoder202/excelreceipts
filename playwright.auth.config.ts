@@ -13,7 +13,7 @@ export default defineConfig({
   },
   projects: [{ name: "authenticated-chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    command: "npm run dev -- --port 3001",
+    command: "npm run start -- --port 3001",
     url: "http://127.0.0.1:3001",
     reuseExistingServer: false,
   },
