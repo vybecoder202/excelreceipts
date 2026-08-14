@@ -4,7 +4,7 @@ Last updated: 2026-08-14
 
 ## Current position
 
-The product has pivoted from fixed construction-module navigation to a general configurable workspace organized as Data, Interfaces, and Forms. The metadata engine, responsive workspace shell, construction starter, linked records, lookups, constrained formulas, typed records, forms, and live interface blocks are implemented locally. Earlier construction module screens and their dedicated schema remain available during the transition.
+The product has pivoted from fixed construction-module navigation to a general configurable workspace organized as Data, Interfaces, and Forms. The metadata engine, responsive workspace shell, construction starter, linked records, lookups, constrained formulas, typed records, forms, and live interface blocks are implemented locally. The Data grid now keeps fields visible when empty and supports inline record creation, working filter/group/sort controls, record/table/field menus, insert-above/below, duplication, comments, field reordering, and recoverable deletion. Earlier construction module screens and their dedicated schema remain available during the transition.
 
 This differs from the original source brief, which assumed construction-specific modules would be the primary application structure. The owner explicitly requested the general builder on 2026-08-14; ADR 0008 records the decision and the boundary that authoritative accounting and inventory posting still require dedicated ledgers.
 
@@ -22,7 +22,8 @@ This differs from the original source brief, which assumed construction-specific
 - [x] Implement the first project-delivery slice: phases, tasks, dependencies, milestones, progress, RLS, and phase UI.
 - [x] Implement the first usable finance, supplier, inventory catalogue, workforce, attendance, and daily-log entry slice.
 - [x] Implement configurable tables, typed fields/cells, linked records, lookups, formulas, views, forms, interfaces, and a construction starter.
-- [ ] Add builder schema editing: rename/archive tables and fields, reorder fields, and reciprocal links.
+- [x] Add the first Airtable-style grid interaction slice: inline rows, filters, groups, sorts, context menus, comments, deletion, and field ordering.
+- [ ] Add remaining builder schema editing: rename tables and fields, restore archived items, and reciprocal links.
 - [ ] Add persistent filtering, sorting, grouping, field visibility, CSV import/export, and attachments.
 - [ ] Add interface block editing, form field layout controls, and automations.
 - [ ] Reconcile configurable construction tables with dedicated authoritative finance/inventory ledgers.
@@ -58,12 +59,12 @@ Checked 2026-08-14 using official documentation and npm registry metadata:
 
 - `npm run typecheck`: passed.
 - `npm run lint`: passed after pinning ESLint 9.39.5, the latest line compatible with the current Next.js React lint plugins.
-- `npm test`: 10 files, 28 tests passed, including linked lookup and exact-decimal formula materialization.
+- `npm test`: 11 files, 31 tests passed, including view filtering/sorting/grouping, linked lookup, and exact-decimal formula materialization.
 - `npm run build`: passed; 20 application routes generated, including dynamic Data, Forms, and Interfaces routes.
 - Pre-pivot browser coverage for the earlier module shell passed. Its authenticated scenario now needs replacement with a builder-focused scenario; the owner has chosen to perform current visual/feature testing, so that browser rewrite is not a completion claim for this phase.
 - `npm install` audit: 0 known vulnerabilities reported.
 - Clean local database reset: foundation migration and fake-only development seed applied successfully.
-- `npm run db:test`: 4 files, 165 pgTAP database/RLS/atomicity tests passed; 45 cover the configurable workspace.
+- `npm run db:test`: 5 files, 199 pgTAP database/RLS/atomicity tests passed; 79 cover the configurable workspace and grid interactions.
 - Generated database types are wired into both Supabase client factories.
 
 ## Current local testing boundary
@@ -72,7 +73,7 @@ The owner will perform visual and feature testing. Authentication expansion is i
 
 ## Next local work
 
-- Add table/field rename, archive, and ordering commands.
+- Add table/field rename and archived-item restoration.
 - Add persisted view filters, sorts, groups, and column visibility.
 - Add form layout editing and interface block/layout editing.
 - Add reciprocal linked fields, rollups, safe richer formulas, CSV import/export, and local attachments metadata.

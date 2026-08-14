@@ -59,6 +59,8 @@ export const recordCommandSchema = z.object({
   tableId: uuid,
   recordId: z.union([uuid, z.literal("")]).default(""),
   formId: z.union([uuid, z.literal("")]).default(""),
+  anchorRecordId: z.union([uuid, z.literal("")]).default(""),
+  placement: z.union([z.enum(["above", "below"]), z.literal("")]).default(""),
   idempotencyKey,
 });
 
@@ -66,5 +68,40 @@ export const archiveRecordSchema = z.object({
   projectId: uuid,
   tableId: uuid,
   recordId: uuid,
+  idempotencyKey,
+});
+
+export const gridRecordMutationSchema = z.object({
+  projectId: uuid,
+  tableId: uuid,
+  recordId: uuid,
+  idempotencyKey,
+});
+
+export const gridFieldMutationSchema = z.object({
+  projectId: uuid,
+  tableId: uuid,
+  fieldId: uuid,
+  idempotencyKey,
+});
+
+export const gridTableMutationSchema = z.object({
+  projectId: uuid,
+  tableId: uuid,
+  idempotencyKey,
+});
+
+export const reorderFieldsSchema = z.object({
+  projectId: uuid,
+  tableId: uuid,
+  fieldIds: z.array(uuid).min(1),
+  idempotencyKey,
+});
+
+export const createRecordCommentSchema = z.object({
+  projectId: uuid,
+  tableId: uuid,
+  recordId: uuid,
+  body: z.string().trim().min(1, "Write a comment first.").max(4000, "Use 4,000 characters or fewer."),
   idempotencyKey,
 });

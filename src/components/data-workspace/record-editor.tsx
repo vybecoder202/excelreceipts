@@ -23,6 +23,8 @@ export function RecordEditor({
   formId = "",
   submitLabel = "Save record",
   visibleFieldIds,
+  anchorRecordId = "",
+  placement = "",
 }: {
   projectId: string;
   tableId: string;
@@ -33,6 +35,8 @@ export function RecordEditor({
   formId?: string;
   submitLabel?: string;
   visibleFieldIds?: string[];
+  anchorRecordId?: string;
+  placement?: "above" | "below" | "";
 }) {
   const [state, action, pending] = useActionState(saveDataRecordAction, workspaceIdleState);
   const recordsByTable = new Map<string, MaterializedRecord[]>();
@@ -49,6 +53,8 @@ export function RecordEditor({
     <input name="tableId" type="hidden" value={tableId} />
     <input name="recordId" type="hidden" value={record?.id ?? ""} />
     <input name="formId" type="hidden" value={formId} />
+    <input name="anchorRecordId" type="hidden" value={anchorRecordId} />
+    <input name="placement" type="hidden" value={placement} />
     <input name="idempotencyKey" type="hidden" value={idempotencyKey} />
     {state.status === "error" ? <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-900" role="alert">{state.message}</p> : null}
     {editableFields.map((field) => {

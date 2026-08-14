@@ -814,6 +814,51 @@ export type Database = {
           },
         ]
       }
+      data_record_comments: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string
+          id: string
+          project_id: string
+          record_id: string
+          table_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by: string
+          id?: string
+          project_id: string
+          record_id: string
+          table_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          project_id?: string
+          record_id?: string
+          table_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_record_comments_project_id_table_id_fkey"
+            columns: ["project_id", "table_id"]
+            isOneToOne: false
+            referencedRelation: "data_tables"
+            referencedColumns: ["project_id", "id"]
+          },
+          {
+            foreignKeyName: "data_record_comments_table_id_record_id_fkey"
+            columns: ["table_id", "record_id"]
+            isOneToOne: false
+            referencedRelation: "data_records"
+            referencedColumns: ["table_id", "id"]
+          },
+        ]
+      }
       data_record_links: {
         Row: {
           created_at: string
@@ -875,6 +920,7 @@ export type Database = {
           created_at: string
           created_by: string
           id: string
+          position: number
           project_id: string
           record_number: number
           table_id: string
@@ -886,6 +932,7 @@ export type Database = {
           created_at?: string
           created_by: string
           id?: string
+          position: number
           project_id: string
           record_number?: never
           table_id: string
@@ -897,6 +944,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
+          position?: number
           project_id?: string
           record_number?: never
           table_id?: string
@@ -2242,11 +2290,27 @@ export type Database = {
       }
     }
     Functions: {
+      archive_data_field: {
+        Args: {
+          p_field_id: string
+          p_idempotency_key: string
+          p_project_id: string
+        }
+        Returns: string
+      }
       archive_data_record: {
         Args: {
           p_idempotency_key: string
           p_project_id: string
           p_record_id: string
+        }
+        Returns: string
+      }
+      archive_data_table: {
+        Args: {
+          p_idempotency_key: string
+          p_project_id: string
+          p_table_id: string
         }
         Returns: string
       }
@@ -2310,6 +2374,15 @@ export type Database = {
         }
         Returns: string
       }
+      create_data_record_comment: {
+        Args: {
+          p_body: string
+          p_idempotency_key: string
+          p_project_id: string
+          p_record_id: string
+        }
+        Returns: string
+      }
       create_data_table: {
         Args: {
           p_color?: string
@@ -2365,6 +2438,18 @@ export type Database = {
         }
         Returns: string
       }
+      create_positioned_data_record: {
+        Args: {
+          p_anchor_record_id: string
+          p_idempotency_key: string
+          p_links: Json
+          p_placement: string
+          p_project_id: string
+          p_table_id: string
+          p_values: Json
+        }
+        Returns: string
+      }
       create_project: {
         Args: {
           p_description?: string
@@ -2417,6 +2502,14 @@ export type Database = {
         }
         Returns: string
       }
+      duplicate_data_record: {
+        Args: {
+          p_idempotency_key: string
+          p_project_id: string
+          p_record_id: string
+        }
+        Returns: string
+      }
       install_construction_workspace: {
         Args: { p_idempotency_key: string; p_project_id: string }
         Returns: string
@@ -2429,6 +2522,15 @@ export type Database = {
           p_notes?: string
           p_project_id: string
           p_worker_id: string
+        }
+        Returns: string
+      }
+      reorder_data_fields: {
+        Args: {
+          p_idempotency_key: string
+          p_ordered_field_ids: string[]
+          p_project_id: string
+          p_table_id: string
         }
         Returns: string
       }

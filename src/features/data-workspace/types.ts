@@ -52,8 +52,17 @@ export type DataRecordDefinition = {
   id: string;
   table_id: string;
   record_number: number;
+  position: number;
   created_at: string;
   updated_at: string;
+};
+
+export type DataRecordComment = {
+  id: string;
+  table_id: string;
+  record_id: string;
+  body: string;
+  created_at: string;
 };
 
 export type DataCellDefinition = {

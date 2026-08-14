@@ -19,6 +19,7 @@ const record = (id: string, tableId: string, number: number): DataRecordDefiniti
   id,
   table_id: tableId,
   record_number: number,
+  position: number * 1024,
   created_at: "2026-08-14T00:00:00Z",
   updated_at: "2026-08-14T00:00:00Z",
 });

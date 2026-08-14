@@ -6,12 +6,17 @@ import { z } from "zod";
 
 import {
   archiveRecordSchema,
+  createRecordCommentSchema,
   createDataFieldSchema,
   createDataFormSchema,
   createDataInterfaceSchema,
   createDataTableSchema,
   createDataViewSchema,
+  gridFieldMutationSchema,
+  gridRecordMutationSchema,
+  gridTableMutationSchema,
   recordCommandSchema,
+  reorderFieldsSchema,
 } from "@/features/data-workspace/workspace-input";
 import { isDataFieldType, type DataFieldDefinition } from "@/features/data-workspace/types";
 import { getApplicationAccess } from "@/lib/auth/access";
@@ -19,9 +24,14 @@ import type { Json } from "@/lib/supabase/database.types";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export type WorkspaceActionState = {
-  status: "idle" | "error";
+  status: "idle" | "error" | "success";
   message?: string;
   fieldErrors?: Record<string, string[] | undefined>;
+};
+
+export type GridMutationResult = {
+  ok: boolean;
+  message: string;
 };
 
 async function authorizeWorkspace(projectId: string) {
@@ -44,6 +54,12 @@ function databaseError(code: string | undefined, fallback: string) {
   if (code === "23505") return errorState("That name or relationship already exists in this workspace.");
   if (code === "23514" || code === "22023") return errorState("The record does not satisfy the table or relationship rules. Review the fields and try again.");
   return errorState(fallback);
+}
+
+function mutationError(code: string | undefined, message: string | undefined, fallback: string): GridMutationResult {
+  if (["22023", "23514", "23505"].includes(code ?? "") && message) return { ok: false, message };
+  if (code === "42501") return { ok: false, message: "Your project role does not permit this change." };
+  return { ok: false, message: fallback };
 }
 
 function refreshBuilder() {
@@ -173,6 +189,8 @@ export async function saveDataRecordAction(
     tableId: formData.get("tableId"),
     recordId: formData.get("recordId") ?? "",
     formId: formData.get("formId") ?? "",
+    anchorRecordId: formData.get("anchorRecordId") ?? "",
+    placement: formData.get("placement") ?? "",
     idempotencyKey: formData.get("idempotencyKey"),
   });
   if (!parsed.success) return errorState("This record panel is out of date. Refresh and try again.");
@@ -227,14 +245,25 @@ export async function saveDataRecordAction(
   }
   if (Object.keys(fieldErrors).length) return errorState("Review the highlighted fields and try again.", fieldErrors);
 
-  const { error } = await supabase.rpc("save_data_record", {
-    p_project_id: authorization.projectId,
-    p_table_id: parsed.data.tableId,
-    p_values: values,
-    p_links: links,
-    p_idempotency_key: parsed.data.idempotencyKey,
-    p_record_id: parsed.data.recordId || undefined,
-  });
+  const positioned = !parsed.data.recordId && parsed.data.anchorRecordId && parsed.data.placement;
+  const { error } = positioned
+    ? await supabase.rpc("create_positioned_data_record", {
+        p_project_id: authorization.projectId,
+        p_table_id: parsed.data.tableId,
+        p_values: values,
+        p_links: links,
+        p_anchor_record_id: parsed.data.anchorRecordId,
+        p_placement: parsed.data.placement as "above" | "below",
+        p_idempotency_key: parsed.data.idempotencyKey,
+      })
+    : await supabase.rpc("save_data_record", {
+        p_project_id: authorization.projectId,
+        p_table_id: parsed.data.tableId,
+        p_values: values,
+        p_links: links,
+        p_idempotency_key: parsed.data.idempotencyKey,
+        p_record_id: parsed.data.recordId || undefined,
+      });
   if (error) return databaseError(error.code, "The record could not be saved. No partial values were kept.");
   refreshBuilder();
   if (parsed.data.formId) redirect(`/forms/${parsed.data.formId}?submitted=1`);
@@ -259,6 +288,107 @@ export async function archiveDataRecordAction(formData: FormData) {
   });
   refreshBuilder();
   redirect(`/data/${parsed.data.tableId}?${error ? "error" : "archived"}=record`);
+}
+
+export async function duplicateDataRecordMutation(input: unknown): Promise<GridMutationResult> {
+  const parsed = gridRecordMutationSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: "The selected record is invalid. Refresh and try again." };
+  const authorization = await authorizeWorkspace(parsed.data.projectId);
+  if (!authorization.authorized) return { ok: false, message: authorization.message };
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.rpc("duplicate_data_record", {
+    p_project_id: authorization.projectId,
+    p_record_id: parsed.data.recordId,
+    p_idempotency_key: parsed.data.idempotencyKey,
+  });
+  if (error) return mutationError(error.code, error.message, "The record could not be duplicated.");
+  refreshBuilder();
+  return { ok: true, message: "Record duplicated below the original." };
+}
+
+export async function archiveDataRecordMutation(input: unknown): Promise<GridMutationResult> {
+  const parsed = gridRecordMutationSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: "The selected record is invalid. Refresh and try again." };
+  const authorization = await authorizeWorkspace(parsed.data.projectId);
+  if (!authorization.authorized) return { ok: false, message: authorization.message };
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.rpc("archive_data_record", {
+    p_project_id: authorization.projectId,
+    p_record_id: parsed.data.recordId,
+    p_idempotency_key: parsed.data.idempotencyKey,
+  });
+  if (error) return mutationError(error.code, error.message, "The record could not be deleted.");
+  refreshBuilder();
+  return { ok: true, message: "Record deleted from active views." };
+}
+
+export async function archiveDataFieldMutation(input: unknown): Promise<GridMutationResult> {
+  const parsed = gridFieldMutationSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: "The selected field is invalid. Refresh and try again." };
+  const authorization = await authorizeWorkspace(parsed.data.projectId);
+  if (!authorization.authorized) return { ok: false, message: authorization.message };
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.rpc("archive_data_field", {
+    p_project_id: authorization.projectId,
+    p_field_id: parsed.data.fieldId,
+    p_idempotency_key: parsed.data.idempotencyKey,
+  });
+  if (error) return mutationError(error.code, error.message, "The field could not be deleted.");
+  refreshBuilder();
+  return { ok: true, message: "Field deleted from this table." };
+}
+
+export async function archiveDataTableMutation(input: unknown): Promise<GridMutationResult> {
+  const parsed = gridTableMutationSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: "The selected table is invalid. Refresh and try again." };
+  const authorization = await authorizeWorkspace(parsed.data.projectId);
+  if (!authorization.authorized) return { ok: false, message: authorization.message };
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.rpc("archive_data_table", {
+    p_project_id: authorization.projectId,
+    p_table_id: parsed.data.tableId,
+    p_idempotency_key: parsed.data.idempotencyKey,
+  });
+  if (error) return mutationError(error.code, error.message, "The table could not be deleted.");
+  refreshBuilder();
+  return { ok: true, message: "Table deleted from the workspace." };
+}
+
+export async function reorderDataFieldsMutation(input: unknown): Promise<GridMutationResult> {
+  const parsed = reorderFieldsSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: "The new field order is invalid. Refresh and try again." };
+  const authorization = await authorizeWorkspace(parsed.data.projectId);
+  if (!authorization.authorized) return { ok: false, message: authorization.message };
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.rpc("reorder_data_fields", {
+    p_project_id: authorization.projectId,
+    p_table_id: parsed.data.tableId,
+    p_ordered_field_ids: parsed.data.fieldIds,
+    p_idempotency_key: parsed.data.idempotencyKey,
+  });
+  if (error) return mutationError(error.code, error.message, "The field order could not be saved.");
+  refreshBuilder();
+  return { ok: true, message: "Field order saved." };
+}
+
+export async function createDataRecordCommentAction(
+  _state: WorkspaceActionState,
+  formData: FormData,
+): Promise<WorkspaceActionState> {
+  const parsed = createRecordCommentSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return errorState("Write a comment and try again.", parsed.error.flatten().fieldErrors);
+  const authorization = await authorizeWorkspace(parsed.data.projectId);
+  if (!authorization.authorized) return errorState(authorization.message);
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.rpc("create_data_record_comment", {
+    p_project_id: authorization.projectId,
+    p_record_id: parsed.data.recordId,
+    p_body: parsed.data.body,
+    p_idempotency_key: parsed.data.idempotencyKey,
+  });
+  if (error) return databaseError(error.code, "The comment could not be added.");
+  revalidatePath(`/data/${parsed.data.tableId}`);
+  return { status: "success", message: "Comment added." };
 }
 
 export async function createDataViewAction(_state: WorkspaceActionState, formData: FormData): Promise<WorkspaceActionState> {

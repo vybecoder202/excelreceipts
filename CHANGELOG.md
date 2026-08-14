@@ -11,7 +11,12 @@ All notable project changes are recorded here.
 - Configurable form definitions whose submissions write to the same Data records.
 - Configurable interface definitions with live record counts, exact currency summaries, averages, and recent-record lists.
 - Construction starter that installs eight related tables, ten views, two forms, two lookup fields, and a live overview interface without inserting fake records.
-- Forty-five workspace-specific pgTAP tests; the complete database suite now contains 165 passing tests.
+- Seventy-nine workspace-specific pgTAP tests; the complete database suite now contains 199 passing tests.
+- Persistent empty-table column headers and responsive inline record creation.
+- Working URL-based Filter, Group, and Sort controls for configurable data views.
+- Record context menus for edit, insert above/below, duplicate, comment, and recoverable delete, with matching visible ellipsis controls.
+- Field drag reordering, move-left/right actions, inline field creation entry points, protected field deletion, and table context-menu deletion.
+- Audited record comments, fractional row ordering, dependency-aware table/field archives, and 34 additional pgTAP interaction tests.
 
 - Initial product requirements, architecture, database design, implementation plan, and durable project conventions.
 - Architecture decision records for the stack, ledger correction model, and UI direction.
