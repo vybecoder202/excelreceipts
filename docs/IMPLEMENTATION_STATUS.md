@@ -4,7 +4,7 @@ Last updated: 2026-08-14
 
 ## Current position
 
-Phase 0 discovery/design and the Phase 1 application foundation are complete. Phase 2 has started with a locally reproducible Supabase database, typed clients, private owner admission, project creation, and tested row-level authorization. UI/UX Pro Max produced the persistent system under `design-system/construction-manager/`; its typography and primary-action treatment were refined for a nontechnical homeowner.
+Phase 0 discovery/design and the Phase 1 application foundation are complete. Phase 2 now includes a locally reproducible Supabase database, typed clients, private owner admission, project creation, tested row-level authorization, SSR session refresh, protected server access, and a responsive owner setup flow. UI/UX Pro Max produced the persistent system under `design-system/construction-manager/`; its typography and primary-action treatment were refined for a nontechnical homeowner.
 
 ## Phase checklist
 
@@ -16,6 +16,7 @@ Phase 0 discovery/design and the Phase 1 application foundation are complete. Ph
 - [x] Record initial Phase 0 architectural decisions.
 - [x] Scaffold and verify the initial Phase 1 application foundation.
 - [x] Implement the identity/project database foundation and baseline RLS.
+- [x] Implement SSR session refresh, server-side access context, and owner project setup.
 - [ ] Extend migrations and RLS across the remaining business modules.
 - [ ] Implement core business modules.
 - [ ] Verify external accounts, integrations, deployment, backup, and restore.
@@ -50,17 +51,17 @@ Checked 2026-08-14 using official documentation and npm registry metadata:
 
 - `npm run typecheck`: passed.
 - `npm run lint`: passed after pinning ESLint 9.39.5, the latest line compatible with the current Next.js React lint plugins.
-- `npm test`: 2 files, 6 tests passed.
+- `npm test`: 5 files, 14 tests passed.
 - `npm run build`: passed; 17 application routes generated.
-- `npm run test:e2e`: 3 passed and 1 intentionally skipped by project targeting across desktop/mobile Chromium.
+- `npm run test:e2e`: 7 passed and 1 intentionally skipped by project targeting across desktop/mobile Chromium.
+- `npm run test:e2e:auth`: 1 passed against reset local Supabase; verified fake-owner password session cookies, protected setup, transactional project creation, authorized dashboard state, and sign-out.
 - Browser QA: 1440×900 and 375×812 both had no horizontal overflow; adaptive navigation behaved correctly; visible mobile interactive targets were at least 44 px.
 - `npm install` audit: 0 known vulnerabilities reported.
 - Clean local database reset: foundation migration and fake-only development seed applied successfully.
-- `npm run db:test`: 20 pgTAP database/RLS tests passed.
+- `npm run db:test`: 23 pgTAP database/RLS tests passed.
 - Generated database types are wired into both Supabase client factories.
 
 ## Next local work
 
-- Add authenticated session refresh/proxy behavior and the owner-only project setup flow.
-- Connect the dashboard to authorized project data while retaining explicit empty/loading/error states.
 - Begin the project delivery tables and tested policies: phases, tasks, milestones, progress, and change orders.
+- Add authenticated integration coverage when the hosted development Supabase/Google provider account checkpoint is reached.

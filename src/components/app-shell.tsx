@@ -9,6 +9,7 @@ import {
   FileText,
   HardHat,
   Home,
+  LogOut,
   Menu,
   MoreHorizontal,
   PackageCheck,
@@ -23,7 +24,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FormEvent, type ReactNode, useState } from "react";
 
+import { signOutAction } from "@/app/actions/auth";
 import { cn } from "@/lib/cn";
+import type { ApplicationAccessContext } from "@/lib/auth/types";
 
 const desktopNavigation = [
   { href: "/", label: "Overview", icon: Home },
@@ -48,7 +51,13 @@ function isActivePath(pathname: string, href: string) {
   return href === "/" ? pathname === href : pathname.startsWith(href);
 }
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({
+  access,
+  children,
+}: {
+  access: Exclude<ApplicationAccessContext, { mode: "configured" }>;
+  children: ReactNode;
+}) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -111,19 +120,41 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Settings className="size-5" strokeWidth={1.75} />
             Settings
           </Link>
-          <Link
-            className="mt-1 flex min-h-14 items-center gap-3 rounded-xl px-3 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-700/25"
-            href="/sign-in"
-          >
-            <span className="grid size-9 place-items-center rounded-full bg-slate-200 text-slate-600">
-              <CircleUserRound className="size-5" aria-hidden="true" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-sm font-semibold text-slate-800">Not signed in</span>
-              <span className="block truncate text-xs text-slate-500">Foundation mode</span>
-            </span>
-            <ChevronDown className="size-4 text-slate-400" aria-hidden="true" />
-          </Link>
+          {access.mode === "authenticated" ? (
+            <div className="mt-1 flex min-h-14 items-center gap-3 rounded-xl px-3">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-blue-100 text-blue-900">
+                <CircleUserRound className="size-5" aria-hidden="true" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-sm font-semibold text-slate-800">{access.user.displayName}</span>
+                <span className="block truncate text-xs text-slate-500">{access.user.email}</span>
+              </span>
+              <form action={signOutAction}>
+                <button
+                  aria-label="Sign out"
+                  className="grid size-11 cursor-pointer place-items-center rounded-xl text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-700/25"
+                  title="Sign out"
+                  type="submit"
+                >
+                  <LogOut className="size-5" aria-hidden="true" />
+                </button>
+              </form>
+            </div>
+          ) : (
+            <Link
+              className="mt-1 flex min-h-14 items-center gap-3 rounded-xl px-3 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-700/25"
+              href="/sign-in"
+            >
+              <span className="grid size-9 place-items-center rounded-full bg-slate-200 text-slate-600">
+                <CircleUserRound className="size-5" aria-hidden="true" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold text-slate-800">Not signed in</span>
+                <span className="block truncate text-xs text-slate-500">Foundation mode</span>
+              </span>
+              <ChevronDown className="size-4 text-slate-400" aria-hidden="true" />
+            </Link>
+          )}
         </div>
       </aside>
 
@@ -162,10 +193,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Link
               className="ml-auto inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-800 px-4 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-900 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-700/25 sm:ml-0"
               href="/setup"
-              aria-label="Set up project"
+              aria-label={access.mode === "authenticated" && access.project ? "Open project setup" : "Set up project"}
             >
-              <span className="hidden sm:inline">Set up project</span>
-              <span className="sm:hidden">Set up</span>
+              <span className="hidden sm:inline">{access.mode === "authenticated" && access.project ? "Project setup" : "Set up project"}</span>
+              <span className="sm:hidden">Setup</span>
             </Link>
           </div>
         </header>
@@ -183,7 +214,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <X className="size-6" />
                 </button>
               </div>
-              <nav className="overflow-y-auto p-3" aria-label="Mobile navigation drawer">
+              <nav className="flex-1 overflow-y-auto p-3" aria-label="Mobile navigation drawer">
                 <ul className="space-y-1">
                   {[...desktopNavigation, { href: "/settings", label: "Settings", icon: Settings }].map((item) => {
                     const active = isActivePath(pathname, item.href);
@@ -199,6 +230,27 @@ export function AppShell({ children }: { children: ReactNode }) {
                   })}
                 </ul>
               </nav>
+              <div className="border-t border-slate-200 p-3">
+                {access.mode === "authenticated" ? (
+                  <div className="flex min-h-14 items-center gap-3 rounded-xl px-3">
+                    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-blue-100 text-blue-900"><CircleUserRound className="size-5" aria-hidden="true" /></span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold text-slate-900">{access.user.displayName}</span>
+                      <span className="block truncate text-xs text-slate-500">{access.user.email}</span>
+                    </span>
+                    <form action={signOutAction}>
+                      <button aria-label="Sign out" className="grid size-11 cursor-pointer place-items-center rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-700/25" type="submit">
+                        <LogOut className="size-5" aria-hidden="true" />
+                      </button>
+                    </form>
+                  </div>
+                ) : (
+                  <Link className="flex min-h-12 items-center gap-3 rounded-xl px-3 font-semibold text-slate-700 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-700/25" href="/sign-in" onClick={() => setMenuOpen(false)}>
+                    <CircleUserRound className="size-5" aria-hidden="true" />
+                    Sign in
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         ) : null}

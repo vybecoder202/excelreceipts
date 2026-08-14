@@ -1,14 +1,27 @@
-import { Building2, Check, ShieldCheck } from "lucide-react";
+import { Building2, Check, CircleAlert, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { safeNextPath } from "@/lib/auth/navigation";
 import { hasPublicSupabaseConfiguration } from "@/lib/env/public";
 
 export const metadata: Metadata = { title: "Sign in" };
 
-export default function SignInPage() {
+const errorMessages: Record<string, string> = {
+  callback: "Google sign-in could not be completed. Retry and confirm that the same Google account is selected.",
+  configuration: "Sign-in is not configured for this environment yet.",
+};
+
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; next?: string }>;
+}) {
   const configured = hasPublicSupabaseConfiguration();
+  const parameters = await searchParams;
+  const nextPath = safeNextPath(parameters.next);
+  const errorMessage = parameters.error ? errorMessages[parameters.error] : undefined;
 
   return (
     <main className="grid min-h-dvh bg-slate-50 lg:grid-cols-[1.05fr_0.95fr]">
@@ -34,7 +47,13 @@ export default function SignInPage() {
           <span className="grid size-12 place-items-center rounded-2xl bg-blue-100 text-blue-900"><ShieldCheck className="size-6" /></span>
           <h1 className="mt-5 text-3xl font-extrabold tracking-tight text-slate-950">Welcome back</h1>
           <p className="mt-2 text-sm leading-6 text-slate-600">Use the explicitly allowlisted Google account. Other Google accounts will not receive project access.</p>
-          <div className="mt-8"><GoogleSignInButton configured={configured} /></div>
+          {errorMessage ? (
+            <div className="mt-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-900" role="alert">
+              <CircleAlert className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+              <span>{errorMessage}</span>
+            </div>
+          ) : null}
+          <div className="mt-8"><GoogleSignInButton configured={configured} nextPath={nextPath} /></div>
           <div className="mt-8 border-t border-slate-200 pt-6">
             <p className="text-xs leading-5 text-slate-500">Google sign-in proves identity. Project membership and database Row Level Security still decide what the account may read or change.</p>
           </div>

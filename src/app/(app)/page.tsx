@@ -5,6 +5,7 @@ import {
   CalendarClock,
   Camera,
   Check,
+  CircleCheckBig,
   CircleDollarSign,
   CloudOff,
   FileUp,
@@ -23,6 +24,7 @@ import Link from "next/link";
 import { MetricCard } from "@/components/dashboard/metric-card";
 import { Card } from "@/components/ui/card";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getApplicationAccess } from "@/lib/auth/access";
 import { getFoundationReadiness } from "@/lib/env/server";
 
 const metrics = [
@@ -39,24 +41,40 @@ const quickActions = [
   { label: "Upload invoice", detail: "Image or PDF document", icon: FileUp, href: "/setup#project" },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ created?: string }>;
+}) {
   const readiness = getFoundationReadiness(process.env);
+  const access = await getApplicationAccess();
+  const project = access.mode === "authenticated" ? access.project : null;
+  const { created } = await searchParams;
 
   return (
     <div className="space-y-6 lg:space-y-8">
+      {created === "1" && project ? (
+        <div className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-950" role="status">
+          <CircleCheckBig className="mt-0.5 size-5 shrink-0 text-emerald-800" aria-hidden="true" />
+          <div>
+            <p className="font-bold">Project created securely</p>
+            <p>Your ZMW and Africa/Lusaka defaults are active. You can now add the project’s working records in controlled stages.</p>
+          </div>
+        </div>
+      ) : null}
       <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between" aria-labelledby="overview-title">
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            <StatusPill tone="warning">Foundation mode</StatusPill>
-            <span className="text-sm font-medium text-slate-500">No project data connected</span>
+            <StatusPill tone={project ? "success" : "warning"}>{project ? "Project connected" : access.mode === "authenticated" ? "Project setup required" : "Foundation mode"}</StatusPill>
+            <span className="text-sm font-medium text-slate-500">{project ? project.reference : "No project data connected"}</span>
           </div>
-          <h1 id="overview-title" className="text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">Project overview</h1>
+          <h1 id="overview-title" className="text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{project?.name ?? "Project overview"}</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
-            Your budget, site activity, and delivery status will come together here once the secure project foundation is configured.
+            {project ? "The secure project is ready. Financial and operational totals will appear as each tested business module is connected." : "Your budget, site activity, and delivery status will come together here once the secure project foundation is configured."}
           </p>
         </div>
         <Link className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-xl border border-slate-300 bg-white px-4 text-sm font-bold text-slate-800 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-700/25 sm:self-auto" href="/setup">
-          View setup checklist
+          {project ? "View project settings" : "View setup checklist"}
           <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
       </section>
@@ -72,7 +90,7 @@ export default function DashboardPage() {
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-bold text-blue-950 shadow-sm transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-white/45" href="/setup">
-                Start local setup
+                {project ? "Review project setup" : access.mode === "authenticated" ? "Create your project" : "Start local setup"}
                 <ArrowRight className="size-4" />
               </Link>
               <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/30 bg-white/10 px-4 text-sm font-bold text-white transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-white/45" href="/modules">
@@ -95,7 +113,7 @@ export default function DashboardPage() {
         <div className="mb-3 flex items-end justify-between gap-4">
           <div>
             <h2 id="financial-position-title" className="text-lg font-extrabold tracking-tight text-slate-950">Financial position</h2>
-            <p className="mt-1 text-sm text-slate-500">Values remain blank until an authorized project is connected.</p>
+            <p className="mt-1 text-sm text-slate-500">{project ? "Values remain blank until the financial module is implemented and verified." : "Values remain blank until an authorized project is connected."}</p>
           </div>
           <StatusPill>Not calculated</StatusPill>
         </div>
@@ -139,9 +157,9 @@ export default function DashboardPage() {
             <div className="max-w-sm">
               <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-slate-100 text-slate-600" aria-hidden="true"><CalendarClock className="size-7" /></span>
               <h3 className="mt-4 font-extrabold text-slate-900">Nothing recorded yet</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-500">Once the first project is created, this feed will show authorized changes in time order.</p>
+              <p className="mt-2 text-sm leading-6 text-slate-500">{project ? "The project creation event is protected in the audit ledger. Operational activity will appear as modules are connected." : "Once the first project is created, this feed will show authorized changes in time order."}</p>
               <Link className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 text-sm font-bold text-blue-800 transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-700/25" href="/setup">
-                Prepare the project
+                {project ? "Review project setup" : "Prepare the project"}
                 <ArrowRight className="size-4" />
               </Link>
             </div>
@@ -158,13 +176,13 @@ export default function DashboardPage() {
           </div>
           <ul className="mt-5 space-y-3">
             <ReadinessRow label="Application shell" ready icon={Check} />
-            <ReadinessRow label="Supabase database" ready={readiness.supabaseConfigured} icon={Landmark} />
-            <ReadinessRow label="Owner access" ready={readiness.ownerConfigured} icon={ShieldCheck} />
+            <ReadinessRow label="Supabase database" ready={readiness.supabaseConfigured || access.mode === "authenticated"} icon={Landmark} />
+            <ReadinessRow label="Owner access" ready={readiness.ownerConfigured && (access.mode !== "authenticated" || access.canCreateProject || Boolean(project))} icon={ShieldCheck} />
             <ReadinessRow label="Google Drive" ready={readiness.driveConfigured} icon={CloudOff} />
             <ReadinessRow label="Project defaults" ready={readiness.projectDefaultsConfigured} icon={Settings} />
           </ul>
           <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-950">
-            Financial and stock actions stay unavailable until secure configuration and database rules are in place.
+            {project ? "Project access is active. Financial and stock actions stay unavailable until their transactional rules and tests are in place." : "Financial and stock actions stay unavailable until secure configuration and database rules are in place."}
           </div>
         </Card>
       </div>

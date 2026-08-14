@@ -12,7 +12,9 @@ All notable project changes are recorded here.
 - Next.js 16 strict TypeScript foundation with responsive application shell, mobile navigation, module routes, setup and sign-in boundaries, PWA manifest/offline shell, and security headers.
 - Validated environment boundaries, Supabase browser/server factories, exact decimal money helpers, Vitest and Playwright test foundations.
 - Initial security, cost/limits, acceptance test, and production configuration-gate documentation.
-- Local Supabase project configuration, the first identity/project migration, fake-only development seed, generated database types, and 20 pgTAP authorization tests.
+- Local Supabase project configuration, identity/project migrations, valid fake-only Auth development seed, generated database types, and 23 pgTAP authorization/atomicity tests.
+- Supabase SSR cookie refresh through Next.js Proxy, signed-claim access context, safe sign-out, redirect validation, and protected application layouts.
+- Responsive owner-only project setup with validated server action, idempotent database command, loading/error feedback, and authorized dashboard identity state.
 
 ### Changed
 

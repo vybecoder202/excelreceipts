@@ -1,6 +1,6 @@
 # Security model
 
-Status: initial threat model and foundation controls
+Status: initial threat model with session, owner admission, and database foundation controls
 Last updated: 2026-08-14
 
 ## Protected assets
@@ -39,13 +39,16 @@ Last updated: 2026-08-14
 - Security response headers disable MIME sniffing and framing, restrict referrer data, and deny unneeded powerful features.
 - Supabase browser/server client factories use only the publishable URL/key; privileged credentials have no browser import path.
 - Google sign-in starts only when public Supabase configuration exists; callback destinations are restricted to local absolute paths.
+- Next.js 16 Proxy refreshes Supabase cookies and applies private/no-store response headers; protected server layouts validate signed JWT claims with `getClaims()`.
+- Server-rendered access context reads only the signed-in profile, active membership, authorized project, and project settings permitted by RLS.
+- Project creation revalidates the session and private owner allowlist, validates input, and invokes one transactional idempotent database command. Public errors never include private rows or credentials.
 - Offline service-worker logic caches only the offline shell and immutable same-origin assets. It excludes APIs and authentication and never queues mutations.
 - Exact money helpers reject silent rounding.
 - UI actions disclose foundation state instead of pretending a write succeeded.
 
 ## Phase 2 database controls
 
-Every exposed table will have RLS enabled before grants. Policies will use `auth.uid()` and active project membership. Read-only roles receive no mutation policies. Integration-secret tables will not be exposed through the normal data API.
+Every exposed foundation table has forced RLS before grants. Policies use `auth.uid()` and active project membership. Read-only roles receive no mutation grants or policies. The private owner allowlist is outside the exposed schema. Future business tables must follow the same default-deny pattern before application wiring.
 
 Critical database functions will:
 
@@ -73,8 +76,8 @@ No real secret belongs in the repository, ordinary chat, screenshots, issue text
 
 ## Open security work
 
-- Implement authentication session refresh proxy and owner admission.
-- Implement RLS, grants, transactional functions, audit/idempotency, and adversarial database tests.
+- Verify Google authentication and owner admission against hosted development Supabase at the account checkpoint.
+- Extend RLS, grants, transactional functions, audit/idempotency, and adversarial tests across every business module.
 - Finalize CSP after report/Drive dependencies are selected.
 - Implement encrypted token storage and key rotation.
 - Implement safe upload inspection and rate limiting.

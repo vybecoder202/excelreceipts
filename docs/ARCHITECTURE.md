@@ -82,7 +82,8 @@ sequenceDiagram
 
 - Supabase Auth handles Google identity; authorization is application-owned.
 - `profiles`, `project_memberships`, and explicit roles determine access.
-- Production owner sign-in is admitted only when the normalized email is in the configured allowlist and project membership exists.
+- Google sign-in establishes identity but does not grant project access. An active membership is required to read a project; the initial project command is available only when the normalized email appears in both the server-side and private database owner allowlists.
+- Next.js Proxy refreshes Supabase cookies and calls `getClaims()` early. Protected layouts and every Server Action independently verify signed claims and authorization close to the data access.
 - RLS uses the authenticated subject and membership records for reads/writes. Server code still checks authorization to provide defense in depth and clearer errors.
 - Preview deployments use development configuration and are never permitted to point to production by default.
 

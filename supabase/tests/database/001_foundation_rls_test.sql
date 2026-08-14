@@ -1,13 +1,19 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(20);
+select plan(23);
 
 select has_table('public', 'profiles', 'profiles table exists');
 select has_table('public', 'projects', 'projects table exists');
 select has_table('public', 'project_memberships', 'project memberships table exists');
 select has_table('public', 'audit_events', 'audit events table exists');
 select has_function('public', 'create_project', array['text', 'text', 'uuid'], 'create_project command exists');
+
+select results_eq(
+  $$select count(*)::bigint from auth.identities where provider = 'email'$$,
+  $$values (3::bigint)$$,
+  'fake local users have valid Auth identity records'
+);
 
 select ok(
   (select relrowsecurity and relforcerowsecurity from pg_class where oid = 'public.projects'::regclass),
@@ -71,6 +77,23 @@ select is(
   ),
   (select id from public.projects where name = 'Local House Build'),
   'replaying the same idempotency key returns the original project'
+);
+
+select throws_ok(
+  $$select public.create_project(
+    'Unexpected second project',
+    null,
+    'abababab-abab-4bab-8bab-abababababab'::uuid
+  )$$,
+  '23505',
+  'duplicate key value violates unique constraint "one_active_owned_project_per_user_idx"',
+  'an owner cannot create a second active project before project switching exists'
+);
+
+select results_eq(
+  $$select count(*)::bigint from public.projects$$,
+  $$values (1::bigint)$$,
+  'failed second-project creation leaves no partial project'
 );
 
 select throws_ok(

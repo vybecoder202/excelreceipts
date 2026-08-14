@@ -6,7 +6,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
-export function GoogleSignInButton({ configured }: { configured: boolean }) {
+export function GoogleSignInButton({
+  configured,
+  nextPath = "/",
+}: {
+  configured: boolean;
+  nextPath?: string;
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,10 +23,11 @@ export function GoogleSignInButton({ configured }: { configured: boolean }) {
 
     try {
       const supabase = createBrowserSupabaseClient();
-      const redirectTo = new URL("/auth/callback", window.location.origin).toString();
+      const callbackUrl = new URL("/auth/callback", window.location.origin);
+      callbackUrl.searchParams.set("next", nextPath);
       const { error: signInError } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo },
+        options: { redirectTo: callbackUrl.toString() },
       });
       if (signInError) throw signInError;
     } catch {

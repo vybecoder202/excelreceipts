@@ -97,7 +97,7 @@ Every exposed project table enables RLS. Policies check `auth.uid()` against act
 
 Migration `20260814180000_foundation_identity_and_projects.sql` now implements profiles, application roles, projects, project settings, memberships, ZMW/USD reference currencies, units, number sequences, append-only audit events, and idempotency keys. The private owner allowlist is isolated from the exposed schema. Project creation is an authenticated, idempotent database command that atomically creates the project, Africa/Lusaka and ZMW defaults, owner membership, and audit evidence.
 
-All exposed foundation tables have forced RLS. Direct table mutation is revoked, project reads require active membership, and 20 pgTAP tests cover owner admission, defaults, isolation, read-only restrictions, idempotency, and audit immutability.
+All exposed foundation tables have forced RLS. Direct table mutation is revoked, project reads require active membership, and 23 pgTAP tests cover local Auth fixture integrity, owner admission, defaults, single active ownership, isolation, read-only restrictions, idempotency, atomic failure, and audit immutability.
 
 ## Migration sequence
 
