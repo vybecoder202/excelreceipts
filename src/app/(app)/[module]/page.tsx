@@ -22,10 +22,10 @@ const modules = {
   procurement: { title: "Procurement", description: "Manage quotations, purchase orders, partial deliveries, and outstanding quantities.", icon: PackageCheck },
   inventory: { title: "Inventory", description: "Track stock through posted receipts, issues, transfers, returns, damage, and reversals.", icon: Boxes },
   site: { title: "Site & progress", description: "Capture tasks, milestones, daily logs, progress, delays, inspections, and site photos.", icon: HardHat },
-  workforce: { title: "Workforce", description: "Keep worker, attendance, timesheet, rate, and draft wage records together.", icon: UsersRound },
+  workforce: { title: "Workforce", description: "Keep worker, attendance, and timesheet records together without payroll or wage calculations.", icon: UsersRound },
   documents: { title: "Documents", description: "Register private invoices, drawings, photographs, contracts, and generated reports.", icon: FileText },
   reports: { title: "Reports", description: "Generate filter-aware PDF, XLSX, and CSV outputs from deterministic calculations.", icon: ReceiptText },
-  settings: { title: "Settings", description: "Configure the project, roles, currency, timezone, tax, integrations, and backup status.", icon: Settings },
+  settings: { title: "Settings", description: "Configure the project, roles, currency, timezone, integrations, and backup status.", icon: Settings },
 } as const;
 
 type ModuleName = keyof typeof modules;

@@ -1,6 +1,6 @@
 # Initial database design
 
-Status: conceptual model; migrations begin in Phase 2
+Status: foundation migrated and tested; business-module migrations continue in Phase 2
 Last updated: 2026-08-14
 
 ## Design principles
@@ -51,7 +51,7 @@ erDiagram
 
 ### Identity and administration
 
-`profiles`, `application_roles`, `project_memberships`, `project_settings`, `currencies`, `units_of_measure`, `tax_settings`, `number_sequences`, `audit_events`, `idempotency_keys`.
+`profiles`, `application_roles`, `project_memberships`, `project_settings`, `currencies`, `units_of_measure`, `number_sequences`, `audit_events`, `idempotency_keys`.
 
 ### Project delivery
 
@@ -59,7 +59,7 @@ erDiagram
 
 ### Contacts and workforce
 
-`organizations`, `contacts`, `organization_contacts`, `suppliers`, `contractors`, `workers`, `worker_rates`, `attendance`, `timesheets`, `wage_periods`, `wage_adjustments`.
+`organizations`, `contacts`, `organization_contacts`, `suppliers`, `contractors`, `workers`, `attendance`, `timesheets`.
 
 ### Finance
 
@@ -93,11 +93,17 @@ These definitions will be formalized as versioned SQL views/functions and tested
 
 Every exposed project table enables RLS. Policies check `auth.uid()` against active project membership and the minimum role required for the operation. Tables containing integration secrets are never directly exposed. Sensitive operations use narrow server/database functions with explicit membership checks and safe `search_path` settings.
 
+## Implemented foundation
+
+Migration `20260814180000_foundation_identity_and_projects.sql` now implements profiles, application roles, projects, project settings, memberships, ZMW/USD reference currencies, units, number sequences, append-only audit events, and idempotency keys. The private owner allowlist is isolated from the exposed schema. Project creation is an authenticated, idempotent database command that atomically creates the project, Africa/Lusaka and ZMW defaults, owner membership, and audit evidence.
+
+All exposed foundation tables have forced RLS. Direct table mutation is revoked, project reads require active membership, and 20 pgTAP tests cover owner admission, defaults, isolation, read-only restrictions, idempotency, and audit immutability.
+
 ## Migration sequence
 
-1. Extensions, enums/domains, shared timestamp/reference helpers.
-2. Profiles, projects, memberships, settings, and reference data.
-3. Audit and idempotency foundations.
+1. Extensions, enums/domains, and shared helpers. **Implemented for the foundation.**
+2. Profiles, projects, memberships, settings, and reference data. **Implemented.**
+3. Audit and idempotency foundations. **Implemented.**
 4. Project, finance, procurement, inventory, workforce, and document tables in dependency order.
 5. Transactional posting functions and calculation views.
 6. RLS policies, grants, indexes, and database tests.

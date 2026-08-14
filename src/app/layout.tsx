@@ -12,10 +12,10 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  applicationName: "BuildLedger",
+  applicationName: "Construction Manager",
   title: {
-    default: "BuildLedger — Home construction management",
-    template: "%s — BuildLedger",
+    default: "Construction Manager — Home construction management",
+    template: "%s — Construction Manager",
   },
   description: "Private, auditable management for a residential construction project.",
   manifest: "/manifest.webmanifest",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "BuildLedger",
+    title: "Construction Manager",
   },
 };
 

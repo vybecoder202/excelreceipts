@@ -72,7 +72,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </span>
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-amber-700">Home build</p>
-            <p className="text-lg font-extrabold tracking-tight text-slate-950">BuildLedger</p>
+            <p className="text-lg font-extrabold tracking-tight text-slate-950">Construction Manager</p>
           </div>
         </div>
 
@@ -143,7 +143,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-blue-900" aria-hidden="true">
                 <Building2 className="size-5 text-white" />
               </span>
-              <span className="truncate font-extrabold tracking-tight">BuildLedger</span>
+              <span className="truncate font-extrabold tracking-tight">Construction</span>
             </Link>
             <form className="ml-auto hidden max-w-xl flex-1 sm:block lg:ml-0" role="search" onSubmit={handleSearch}>
               <label className="relative block">
@@ -177,7 +177,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4">
                 <span className="flex items-center gap-2 font-extrabold">
                   <span className="grid size-9 place-items-center rounded-xl bg-blue-900" aria-hidden="true"><Building2 className="size-5 text-white" /></span>
-                  BuildLedger
+                  Construction Manager
                 </span>
                 <button className="grid size-11 cursor-pointer place-items-center rounded-xl text-slate-700 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-700/25" onClick={() => setMenuOpen(false)} aria-label="Close navigation menu">
                   <X className="size-6" />

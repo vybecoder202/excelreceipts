@@ -34,9 +34,9 @@ Acceptance: the 100 ordered/80 received/20 outstanding scenario passes; invoice 
 
 ## Phase 5 — site and workforce
 
-Implement tasks, dependencies, milestones, weighted progress, daily logs, workers, attendance, timesheets, and draft wage reporting.
+Implement tasks, dependencies, milestones, weighted progress, daily logs, workers, attendance, and timesheets. Payroll and wage calculations remain out of scope.
 
-Acceptance: progress constraints/weights, mobile daily capture, attendance, and both wage methods pass tests; payroll disclaimer is visible.
+Acceptance: progress constraints/weights, mobile daily capture, attendance, and timesheet tests pass; no payroll or tax total is presented.
 
 ## Phase 6 — Drive and reporting
 

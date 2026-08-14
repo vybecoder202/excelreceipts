@@ -10,7 +10,6 @@ export default defineConfig([
     "coverage/**",
     "playwright-report/**",
     "test-results/**",
-    "scaffold-buildledger/**",
     "next-env.d.ts",
   ]),
 ]);

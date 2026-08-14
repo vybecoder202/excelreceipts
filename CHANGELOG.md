@@ -8,7 +8,13 @@ All notable project changes are recorded here.
 
 - Initial product requirements, architecture, database design, implementation plan, and durable project conventions.
 - Architecture decision records for the stack, ledger correction model, and UI direction.
-- Persistent UI/UX Pro Max design system for the BuildLedger working title.
+- Persistent UI/UX Pro Max design system for Construction Manager.
 - Next.js 16 strict TypeScript foundation with responsive application shell, mobile navigation, module routes, setup and sign-in boundaries, PWA manifest/offline shell, and security headers.
 - Validated environment boundaries, Supabase browser/server factories, exact decimal money helpers, Vitest and Playwright test foundations.
 - Initial security, cost/limits, acceptance test, and production configuration-gate documentation.
+- Local Supabase project configuration, the first identity/project migration, fake-only development seed, generated database types, and 20 pgTAP authorization tests.
+
+### Changed
+
+- Confirmed Construction Manager as the final application name, ZMW as the default currency, and Africa/Lusaka as the project timezone.
+- Removed tax and wage calculations from scope while retaining worker attendance and timesheets.

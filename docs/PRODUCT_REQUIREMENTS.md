@@ -5,9 +5,9 @@ Last updated: 2026-08-14
 
 ## Product summary
 
-BuildLedger is a private, responsive web application for one owner managing a residential house build. It brings budgets, supplier obligations, purchases, deliveries, inventory, site work, workforce records, documents, reports, and recovery operations into one auditable system.
+Construction Manager is a private, responsive web application for one owner managing a residential house build. It brings budgets, supplier obligations, purchases, deliveries, inventory, site work, workforce records, documents, reports, and recovery operations into one auditable system.
 
-The first production release must work without paid infrastructure and without runtime AI. The working name, locale, and business defaults remain configurable until the owner supplies production values.
+The first production release must work without paid infrastructure and without runtime AI. The confirmed defaults are Zambian Kwacha (`ZMW`) and the `Africa/Lusaka` timezone. Tax and wage calculations are excluded from scope by owner decision.
 
 ## Users and access
 
@@ -28,7 +28,7 @@ The owner can:
 2. Trace approved budget, commitments, invoices/expenses, payments, and forecast without conflating them.
 3. Order materials, record partial deliveries, and reconcile physical stock through an append-only ledger.
 4. Capture expenses, invoices, deliveries, photos, and daily logs easily from a phone.
-5. Track phases, tasks, milestones, progress, workers, attendance, and draft wages.
+5. Track phases, tasks, milestones, progress, workers, attendance, and timesheets without payroll calculations.
 6. Generate reproducible PDF, XLSX, and CSV reports whose totals come from deterministic database logic.
 7. Store private documents in a dedicated Google Drive structure and detect missing or inaccessible files.
 8. Audit critical changes and recover the system from encrypted, independently restorable backups.
@@ -37,8 +37,8 @@ The owner can:
 
 ### Administration and projects
 
-- Projects, project settings, memberships, roles, currencies, units, tax configuration, numbering sequences, and audit events.
-- Configurable working name, currency, timezone, tax behavior, and wage methods.
+- Projects, project settings, memberships, roles, currencies, units, numbering sequences, and audit events.
+- Configurable application name, currency, and timezone. The initial production defaults are Construction Manager, ZMW, and Africa/Lusaka.
 
 ### Finance
 
@@ -55,8 +55,8 @@ The owner can:
 
 ### Site and workforce
 
-- Phases, tasks, dependencies, milestones, weighted progress, daily logs, delays, incidents, inspections, defects, photos, workers, rates, attendance, timesheets, wage periods, adjustments, and draft wage reports.
-- Wage outputs are project-management records, not legally authoritative payroll.
+- Phases, tasks, dependencies, milestones, weighted progress, daily logs, delays, incidents, inspections, defects, photos, workers, attendance, and timesheets.
+- Payroll, wage-rate calculations, and tax calculations are intentionally excluded.
 
 ### Documents and reports
 
@@ -98,7 +98,7 @@ The owner can:
 ## Deferred from the first release
 
 - Runtime AI, OCR, natural-language analytics, or paid inference.
-- Legally authoritative payroll/tax filing.
+- Payroll, wage calculations, and tax calculations.
 - Offline mutation of financial or inventory records.
 - Broad Google Drive access beyond the least-privilege application-created/selected files unless explicitly approved.
 

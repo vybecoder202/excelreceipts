@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "BuildLedger — Home Construction Manager",
-    short_name: "BuildLedger",
+    name: "Construction Manager — Home Construction Manager",
+    short_name: "Construction",
     description: "Private management for a residential construction project.",
     start_url: "/",
     display: "standalone",

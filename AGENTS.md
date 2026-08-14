@@ -1,8 +1,8 @@
-# BuildLedger working conventions
+# Construction Manager working conventions
 
 ## Product intent
 
-BuildLedger is the working title for a personal residential construction-management application. It must remain understandable to a nontechnical owner, portable across hosting providers, secure by default, and usable on phones, tablets, and desktop computers.
+Construction Manager is a personal residential construction-management application. It must remain understandable to a nontechnical owner, portable across hosting providers, secure by default, and usable on phones, tablets, and desktop computers. The confirmed default currency is Zambian Kwacha (`ZMW`) and the project timezone is `Africa/Lusaka`.
 
 The source brief is `C:\Users\user\Downloads\construction prompt.md`. When this file and the repository disagree, preserve implemented work and record the discrepancy in `docs/IMPLEMENTATION_STATUS.md` before changing behavior.
 
@@ -42,7 +42,7 @@ Browser code may use only publishable configuration and RLS-scoped clients. Serv
 
 ## UI standards
 
-- `design-system/buildledger/MASTER.md` is the visual source of truth. Page overrides live in its `pages` folder.
+- `design-system/construction-manager/MASTER.md` is the visual source of truth. Page overrides live in its `pages` folder.
 - Mobile-first at 375 px; verify 768, 1024, and 1440 px layouts.
 - Meet WCAG AA contrast. Preserve visible focus indicators and logical keyboard order.
 - Use Lucide SVG icons consistently; do not use emoji as structural icons.

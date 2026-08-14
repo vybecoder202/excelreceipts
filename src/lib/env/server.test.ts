@@ -6,7 +6,6 @@ describe("server environment", () => {
   it("allows an unconfigured local foundation without inventing production values", () => {
     expect(parseServerEnvironment({})).toMatchObject({
       APP_ENV: "development",
-      TAX_ENABLED: "false",
       AI_FEATURES_ENABLED: "false",
     });
   });
@@ -15,7 +14,7 @@ describe("server environment", () => {
     expect(() =>
       assertProductionEnvironment({
         APP_ENV: "production",
-        NEXT_PUBLIC_APP_URL: "https://buildledger.example",
+        NEXT_PUBLIC_APP_URL: "https://construction-manager.example",
       }),
     ).toThrow(/Production configuration is incomplete/);
   });

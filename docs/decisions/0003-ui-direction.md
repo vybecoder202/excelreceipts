@@ -7,7 +7,7 @@ Status: accepted with typography refinement pending
 
 Adopt a calm, light-first operational dashboard with deep blue primary actions, restrained amber attention cues, neutral surfaces, compact but readable data cards, and accessible semantic status colors. Use Lucide SVG icons, an 8-point spacing rhythm, 44 px minimum targets, responsive sidebar/bottom navigation, mobile record cards, visible focus, and reduced-motion support.
 
-The persistent source is `design-system/buildledger/MASTER.md`. The skill-proposed Fira Code heading face is considered too technical for the nontechnical owner persona; Phase 1 will select a calmer heading/body pairing and document it as a master override.
+The persistent source is `design-system/construction-manager/MASTER.md`. The skill-proposed Fira Code heading face was too technical for the nontechnical owner persona; Plus Jakarta Sans is the calmer recorded master override.
 
 ## Rationale
 

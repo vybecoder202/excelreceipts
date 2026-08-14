@@ -4,7 +4,7 @@ Last updated: 2026-08-14
 
 ## Current position
 
-Phase 0 initial discovery/design is complete and the safe local portion of Phase 1 is implemented. The workspace was initially empty and was not a Git repository. UI/UX Pro Max produced the persistent system under `design-system/buildledger/`; its typography and primary-action treatment were refined for a nontechnical homeowner.
+Phase 0 discovery/design and the Phase 1 application foundation are complete. Phase 2 has started with a locally reproducible Supabase database, typed clients, private owner admission, project creation, and tested row-level authorization. UI/UX Pro Max produced the persistent system under `design-system/construction-manager/`; its typography and primary-action treatment were refined for a nontechnical homeowner.
 
 ## Phase checklist
 
@@ -15,7 +15,8 @@ Phase 0 initial discovery/design is complete and the safe local portion of Phase
 - [x] Complete initial security and cost/limits documents.
 - [x] Record initial Phase 0 architectural decisions.
 - [x] Scaffold and verify the initial Phase 1 application foundation.
-- [ ] Implement database migrations and RLS.
+- [x] Implement the identity/project database foundation and baseline RLS.
+- [ ] Extend migrations and RLS across the remaining business modules.
 - [ ] Implement core business modules.
 - [ ] Verify external accounts, integrations, deployment, backup, and restore.
 
@@ -26,26 +27,24 @@ Checked 2026-08-14 using official documentation and npm registry metadata:
 - Node.js available locally: 24.15.0; npm: 11.12.1.
 - Next.js: 16.3.1; React/React DOM: 19.2.8.
 - Tailwind CSS and PostCSS adapter: 4.3.3.
-- Supabase JS: 2.112.3; Supabase SSR: 0.12.4.
+- Supabase JS: 2.112.3; Supabase SSR: 0.12.4; Supabase CLI: 2.114.0.
 - All planned baseline packages checked so far use MIT, ISC, Apache-2.0, or similarly compatible licenses.
 
-## Configurable production decisions
+## Confirmed owner decisions
 
-Safe placeholders will remain until the owner supplies:
-
-- Final application name (working title: BuildLedger).
-- Default currency (no production default assumed).
-- Project timezone (local development currently follows Europe/Moscow, but production is unset).
-- Google email for the production owner allowlist (must go into secure configuration, not documentation).
-- Whether tax is enabled and whether prices are tax-exclusive or tax-inclusive by default.
-- Whether worker rates use hourly, daily, or both methods.
+- Application name: Construction Manager.
+- Default currency: Zambian Kwacha (`ZMW`).
+- Project timezone: Lusaka, Zambia (`Africa/Lusaka`).
+- Tax calculations: excluded.
+- Wage calculations: excluded; worker attendance and timesheets remain in scope.
+- The owner Google email is stored only in the ignored `.env.local` file and is not committed.
 
 ## Risks and blockers
 
 - No external account is required yet.
 - Production authentication, hosted database, Drive, deployment, and backup verification will require account checkpoints later.
 - Free-plan limits and dashboard labels are time-sensitive and must be re-verified from official sources immediately before instructions are finalized.
-- The generated design system suggested highly technical heading typography. The implementation may use a calmer, more owner-friendly heading face while preserving its spacing, color, and accessibility rules; any override will be recorded.
+- The generated design system originally suggested highly technical heading typography. Plus Jakarta Sans is the recorded, implemented owner-friendly override.
 
 ## Foundation verification evidence
 
@@ -56,9 +55,12 @@ Safe placeholders will remain until the owner supplies:
 - `npm run test:e2e`: 3 passed and 1 intentionally skipped by project targeting across desktop/mobile Chromium.
 - Browser QA: 1440×900 and 375×812 both had no horizontal overflow; adaptive navigation behaved correctly; visible mobile interactive targets were at least 44 px.
 - `npm install` audit: 0 known vulnerabilities reported.
+- Clean local database reset: foundation migration and fake-only development seed applied successfully.
+- `npm run db:test`: 20 pgTAP database/RLS tests passed.
+- Generated database types are wired into both Supabase client factories.
 
 ## Next local work
 
-- Add Supabase CLI project configuration and the first Phase 2 migrations.
-- Implement profiles, projects, memberships, owner admission, reference data, audit/idempotency, and baseline RLS tests.
-- Add authenticated session refresh/proxy behavior only alongside those policies so the shell cannot imply access before authorization exists.
+- Add authenticated session refresh/proxy behavior and the owner-only project setup flow.
+- Connect the dashboard to authorized project data while retaining explicit empty/loading/error states.
+- Begin the project delivery tables and tested policies: phases, tasks, milestones, progress, and change orders.

@@ -9,11 +9,11 @@ import { getFoundationReadiness } from "@/lib/env/server";
 export const metadata: Metadata = { title: "Project setup" };
 
 const ownerDecisions = [
-  { label: "Application name", current: "BuildLedger (working title)" },
-  { label: "Default currency", current: "Not set" },
-  { label: "Project timezone", current: "Not set" },
-  { label: "Tax behavior", current: "Disabled placeholder" },
-  { label: "Worker rate methods", current: "Hourly and daily placeholder" },
+  { label: "Application name", current: "Construction Manager" },
+  { label: "Default currency", current: "Zambian Kwacha (ZMW)" },
+  { label: "Project timezone", current: "Africa/Lusaka" },
+  { label: "Tax calculations", current: "Excluded from scope" },
+  { label: "Wage calculations", current: "Excluded from scope" },
 ];
 
 export default function SetupPage() {

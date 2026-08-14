@@ -1,4 +1,4 @@
-const CACHE_VERSION = "buildledger-shell-v1";
+const CACHE_VERSION = "construction-manager-shell-v1";
 const SHELL_FILES = ["/offline", "/icon.svg"];
 
 self.addEventListener("install", (event) => {

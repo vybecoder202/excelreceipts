@@ -68,7 +68,7 @@ export default function DashboardPage() {
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-200">A clear record from day one</p>
             <h2 id="welcome-title" className="mt-3 max-w-2xl text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">Know what was planned, ordered, delivered, used, and paid.</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-blue-100 sm:text-base">
-              BuildLedger keeps financial totals separate from stock movements and preserves a traceable history for every posted correction.
+              Construction Manager keeps financial totals separate from stock movements and preserves a traceable history for every posted correction.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-bold text-blue-950 shadow-sm transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-white/45" href="/setup">

@@ -16,7 +16,7 @@ export default function SignInPage() {
         <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "radial-gradient(circle at 15% 10%, #3b82f6 0, transparent 28%), radial-gradient(circle at 90% 85%, #d97706 0, transparent 26%)" }} />
         <Link className="relative flex items-center gap-3 self-start rounded-xl focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-white/45" href="/">
           <span className="grid size-11 place-items-center rounded-2xl bg-white text-blue-950"><Building2 className="size-6" /></span>
-          <span className="text-xl font-extrabold tracking-tight">BuildLedger</span>
+          <span className="text-xl font-extrabold tracking-tight">Construction Manager</span>
         </Link>
         <div className="relative max-w-xl">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-blue-200">Private home construction records</p>
@@ -30,7 +30,7 @@ export default function SignInPage() {
 
       <section className="grid place-items-center px-4 py-10 sm:px-8">
         <div className="w-full max-w-md">
-          <Link className="mb-10 flex items-center gap-3 lg:hidden" href="/"><span className="grid size-11 place-items-center rounded-2xl bg-blue-950 text-white"><Building2 className="size-6" /></span><span className="text-xl font-extrabold">BuildLedger</span></Link>
+          <Link className="mb-10 flex items-center gap-3 lg:hidden" href="/"><span className="grid size-11 place-items-center rounded-2xl bg-blue-950 text-white"><Building2 className="size-6" /></span><span className="text-xl font-extrabold">Construction Manager</span></Link>
           <span className="grid size-12 place-items-center rounded-2xl bg-blue-100 text-blue-900"><ShieldCheck className="size-6" /></span>
           <h1 className="mt-5 text-3xl font-extrabold tracking-tight text-slate-950">Welcome back</h1>
           <p className="mt-2 text-sm leading-6 text-slate-600">Use the explicitly allowlisted Google account. Other Google accounts will not receive project access.</p>
