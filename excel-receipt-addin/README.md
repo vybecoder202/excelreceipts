@@ -280,12 +280,12 @@ Deploy the `dist` output to an HTTPS host and update every URL in `manifest.xml`
 
 GitHub Pages can host the built add-in because it is a static HTTPS site. If you use GitHub Pages, update `manifest.xml` to the GitHub Pages URL, update the Google OAuth authorized JavaScript origin and redirect URI to the same origin, and then load the updated manifest in Excel.
 
-### GitHub Pages Setup For `kamoyafamily/excelreceipts`
+### GitHub Pages Setup For `vybecoder202/excelreceipts`
 
 This repository is configured to deploy the add-in to:
 
 ```text
-https://kamoyafamily.github.io/excelreceipts/
+https://vybecoder202.github.io/excelreceipts/
 ```
 
 Use this manifest for the hosted version:
@@ -298,10 +298,10 @@ Add these Google OAuth settings:
 
 ```text
 Authorized JavaScript origin:
-https://kamoyafamily.github.io
+https://vybecoder202.github.io
 
 Authorized redirect URI:
-https://kamoyafamily.github.io/excelreceipts/auth/google.html
+https://vybecoder202.github.io/excelreceipts/auth/google.html
 ```
 
 First push:
@@ -312,7 +312,7 @@ git init
 git add excel-receipt-addin .github
 git commit -m "Add Excel receipt add-in"
 git branch -M main
-git remote add origin https://github.com/kamoyafamily/excelreceipts.git
+git remote add origin https://github.com/vybecoder202/excelreceipts.git
 git push -u origin main
 ```
 
