@@ -43,11 +43,12 @@ export async function getSelectionSummary(options: { updateWorksheetDisplay?: bo
   };
 }
 
-async function refreshWorkbookDocumentDisplay(knownDocuments?: ManagedDocument[]): Promise<void> {
+async function refreshWorkbookDocumentDisplay(knownDocuments?: ManagedDocument[], targetExpenseIds?: readonly string[]): Promise<void> {
   const documents = knownDocuments ?? (await listDocuments());
   const links = await listLinks();
   const documentsById = new Map(documents.map((document) => [document.documentId, document]));
   const documentIdsByExpense = new Map<string, string[]>();
+  const targetExpenseIdSet = targetExpenseIds ? new Set(targetExpenseIds) : undefined;
 
   for (const link of links) {
     const ids = documentIdsByExpense.get(link.expenseId) ?? [];
@@ -57,7 +58,7 @@ async function refreshWorkbookDocumentDisplay(knownDocuments?: ManagedDocument[]
     documentIdsByExpense.set(link.expenseId, ids);
   }
 
-  await updateDocumentDisplay(await countDocumentsByExpense(), documentIdsByExpense, documentsById);
+  await updateDocumentDisplay(await countDocumentsByExpense(), documentIdsByExpense, documentsById, targetExpenseIdSet);
 }
 
 export async function attachFileToSelectedExpenses(
@@ -83,7 +84,10 @@ export async function attachFileToSelectedExpenses(
         expenses.map((expense) => expense.expenseId),
         duplicate.documentId
       );
-      await refreshWorkbookDocumentDisplay();
+      await refreshWorkbookDocumentDisplay(
+        undefined,
+        expenses.map((expense) => expense.expenseId)
+      );
       return { document: duplicate, expenses, linkedCount, duplicateOf: duplicate };
     }
   }
@@ -111,7 +115,10 @@ export async function attachFileToSelectedExpenses(
     expenses.map((expense) => expense.expenseId),
     document.documentId
   );
-  await refreshWorkbookDocumentDisplay();
+  await refreshWorkbookDocumentDisplay(
+    undefined,
+    expenses.map((expense) => expense.expenseId)
+  );
   return { document, expenses, linkedCount };
 }
 
@@ -143,7 +150,10 @@ export async function markSelectedExpensesAsCash(): Promise<AttachResult> {
     expenses.map((expense) => expense.expenseId),
     document.documentId
   );
-  await refreshWorkbookDocumentDisplay();
+  await refreshWorkbookDocumentDisplay(
+    undefined,
+    expenses.map((expense) => expense.expenseId)
+  );
   return { document, expenses, linkedCount };
 }
 
@@ -154,11 +164,14 @@ export async function linkExistingDocumentToSelectedExpenses(documentId: string)
     expenses.map((expense) => expense.expenseId),
     documentId
   );
-  await refreshWorkbookDocumentDisplay();
+  await refreshWorkbookDocumentDisplay(
+    undefined,
+    expenses.map((expense) => expense.expenseId)
+  );
   return count;
 }
 
 export async function unlinkDocumentFromExpense(expenseId: string, documentId: string): Promise<void> {
   await unlinkExpenseDocument(expenseId, documentId);
-  await refreshWorkbookDocumentDisplay();
+  await refreshWorkbookDocumentDisplay(undefined, [expenseId]);
 }

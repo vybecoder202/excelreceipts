@@ -189,7 +189,7 @@ export default function App() {
       .some((value) => value!.toLowerCase().includes(query));
   });
 
-  async function handleFileSelected(file: File | undefined) {
+  const handleFileSelected = useCallback(async (file: File | undefined) => {
     if (!file) {
       return;
     }
@@ -222,7 +222,42 @@ export default function App() {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-  }
+  }, [runWithNotice, storage]);
+
+  const pasteImageFromClipboard = useCallback(async () => {
+    if (!navigator.clipboard?.read) {
+      throw new Error("Clipboard image paste is not supported in this Excel browser view. Use Attach Receipt instead.");
+    }
+
+    const clipboardItems = await navigator.clipboard.read();
+    for (const item of clipboardItems) {
+      const imageType = item.types.find((type) => type.startsWith("image/"));
+      if (!imageType) {
+        continue;
+      }
+
+      const blob = await item.getType(imageType);
+      await handleFileSelected(new File([blob], makeClipboardImageName(imageType), { type: imageType }));
+      return;
+    }
+
+    throw new Error("The clipboard does not contain an image.");
+  }, [handleFileSelected]);
+
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) => {
+      const pastedImage = Array.from(event.clipboardData?.files ?? []).find((file) => file.type.startsWith("image/"));
+      if (!pastedImage) {
+        return;
+      }
+
+      event.preventDefault();
+      void handleFileSelected(pastedImage);
+    };
+
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [handleFileSelected]);
 
   async function openDocument(managedDocument: ManagedDocument) {
     await runWithNotice(async () => {
@@ -353,6 +388,13 @@ export default function App() {
             <div className="row-actions">
               <button type="button" onClick={() => fileInputRef.current?.click()} disabled={isBusy || expenses.length === 0}>
                 Attach Receipt
+              </button>
+              <button
+                type="button"
+                onClick={() => void runWithNotice(pasteImageFromClipboard)}
+                disabled={isBusy || expenses.length === 0}
+              >
+                Paste Image
               </button>
               <button type="button" onClick={() => void markCash()} disabled={isBusy || expenses.length === 0}>
                 Cash
@@ -524,4 +566,17 @@ function downloadBlob(blob: Blob, fileName: string): void {
   link.click();
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+}
+
+function makeClipboardImageName(mimeType: string): string {
+  const extensionByType: Record<string, string> = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/gif": "gif",
+    "image/webp": "webp",
+    "image/bmp": "bmp"
+  };
+  const extension = extensionByType[mimeType.toLowerCase()] ?? "png";
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "");
+  return `clipboard-receipt-${stamp}.${extension}`;
 }

@@ -253,7 +253,8 @@ export async function updateDocumentCounts(counts: ReadonlyMap<string, number>):
 export async function updateDocumentDisplay(
   counts: ReadonlyMap<string, number>,
   documentIdsByExpense: ReadonlyMap<string, string[]>,
-  documentsById: ReadonlyMap<string, ManagedDocument>
+  documentsById: ReadonlyMap<string, ManagedDocument>,
+  targetExpenseIds?: ReadonlySet<string>
 ): Promise<void> {
   await Excel.run(async (context) => {
     const selected = await resolveSelectedExpensesContext(context);
@@ -271,6 +272,9 @@ export async function updateDocumentDisplay(
     selected.values.forEach((row, rowIndex) => {
       const expenseId = String(row[idIndex] ?? "");
       if (!expenseId) {
+        return;
+      }
+      if (targetExpenseIds && !targetExpenseIds.has(expenseId)) {
         return;
       }
 
