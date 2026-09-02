@@ -1,0 +1,32 @@
+{
+  "name": "construction-receipt-excel-addin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "cert:install": "office-addin-dev-certs install",
+    "cert:uninstall": "office-addin-dev-certs uninstall",
+    "cert:verify": "office-addin-dev-certs verify",
+    "dev": "vite --host 127.0.0.1 --port 5173",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "office-js": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/office-js": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "office-addin-dev-certs": "^2.0.10",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}

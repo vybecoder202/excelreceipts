@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Drive Authorization</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+      body {
+        color: #182026;
+        font-family: Segoe UI, Arial, sans-serif;
+        margin: 0;
+        padding: 24px;
+      }
+
+      main {
+        display: grid;
+        gap: 12px;
+      }
+
+      p {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Google Drive Authorization</h1>
+      <p id="status">Preparing Google sign-in...</p>
+    </main>
+    <script>
+      const statusElement = document.getElementById("status");
+
+      function parseHash() {
+        const hash = window.location.hash.startsWith("#") ? window.location.hash.slice(1) : window.location.hash;
+        return new URLSearchParams(hash);
+      }
+
+      function postMessageToTaskPane(payload) {
+        const message = JSON.stringify(payload);
+        Office.onReady(() => {
+          if (Office.context.ui.messageParent) {
+            Office.context.ui.messageParent(message);
+            return;
+          }
+          statusElement.textContent = "Authorization finished, but Excel could not receive the result.";
+        });
+      }
+
+      const query = new URLSearchParams(window.location.search);
+      const hash = parseHash();
+
+      if (hash.has("access_token") || hash.has("error")) {
+        postMessageToTaskPane({
+          access_token: hash.get("access_token") || undefined,
+          expires_in: Number(hash.get("expires_in") || "3600"),
+          error: hash.get("error") || undefined,
+          error_description: hash.get("error_description") || undefined,
+          state: hash.get("state") || undefined
+        });
+      } else {
+        const authUrl = query.get("authUrl");
+        if (!authUrl) {
+          statusElement.textContent = "Missing Google authorization URL.";
+          postMessageToTaskPane({ error: "missing_auth_url" });
+        } else {
+          statusElement.textContent = "Opening Google sign-in...";
+          window.location.replace(authUrl);
+        }
+      }
+    </script>
+  </body>
+</html>

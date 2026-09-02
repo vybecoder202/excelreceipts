@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+  <Id>0a829300-2b76-42de-8e31-9c338fb5b9f8</Id>
+  <Version>0.1.0.0</Version>
+  <ProviderName>Construction Manager</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Construction Receipts" />
+  <Description DefaultValue="Attach, link, view, and reconcile supporting documents against Excel expense rows." />
+  <IconUrl DefaultValue="https://localhost:5173/icon-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://localhost:5173/icon-64.png" />
+  <SupportUrl DefaultValue="https://localhost:5173" />
+  <AppDomains>
+    <AppDomain>https://localhost:5173</AppDomain>
+    <AppDomain>http://localhost:5173</AppDomain>
+    <AppDomain>https://accounts.google.com</AppDomain>
+    <AppDomain>https://www.googleapis.com</AppDomain>
+    <AppDomain>https://drive.google.com</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Workbook" />
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://localhost:5173/index.html" />
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Workbook">
+        <DesktopFormFactor>
+          <GetStarted>
+            <Title resid="GetStarted.Title" />
+            <Description resid="GetStarted.Description" />
+            <LearnMoreUrl resid="GetStarted.LearnMoreUrl" />
+          </GetStarted>
+          <FunctionFile resid="Taskpane.Url" />
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <OfficeTab id="TabHome">
+              <Group id="ReceiptGroup">
+                <Label resid="ReceiptGroup.Label" />
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16" />
+                  <bt:Image size="32" resid="Icon.32x32" />
+                  <bt:Image size="80" resid="Icon.80x80" />
+                </Icon>
+                <Control xsi:type="Button" id="AttachDocumentButton">
+                  <Label resid="AttachDocument.Label" />
+                  <Supertip>
+                    <Title resid="AttachDocument.Label" />
+                    <Description resid="AttachDocument.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16" />
+                    <bt:Image size="32" resid="Icon.32x32" />
+                    <bt:Image size="80" resid="Icon.80x80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url" />
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="ManageDocumentsButton">
+                  <Label resid="ManageDocuments.Label" />
+                  <Supertip>
+                    <Title resid="ManageDocuments.Label" />
+                    <Description resid="ManageDocuments.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16" />
+                    <bt:Image size="32" resid="Icon.32x32" />
+                    <bt:Image size="80" resid="Icon.80x80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId2</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://localhost:5173/icon-16.png" />
+        <bt:Image id="Icon.32x32" DefaultValue="https://localhost:5173/icon-32.png" />
+        <bt:Image id="Icon.80x80" DefaultValue="https://localhost:5173/icon-80.png" />
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:5173/index.html" />
+        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://localhost:5173" />
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="GetStarted.Title" DefaultValue="Construction Receipts" />
+        <bt:String id="ReceiptGroup.Label" DefaultValue="Receipts" />
+        <bt:String id="AttachDocument.Label" DefaultValue="Attach Document" />
+        <bt:String id="ManageDocuments.Label" DefaultValue="Manage Documents" />
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="GetStarted.Description" DefaultValue="Manage receipt and document links for construction expense rows." />
+        <bt:String id="AttachDocument.Tooltip" DefaultValue="Open the task pane to attach or link a supporting document." />
+        <bt:String id="ManageDocuments.Tooltip" DefaultValue="Open the document management view." />
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>
